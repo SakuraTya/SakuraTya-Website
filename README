@@ -1,4 +1,4 @@
-This is a PHP project and powered by <a href='http://wordpress.org/'>WordPress</a>.
+This is a PHP project and powered by WordPress( http://wordpress.org/ ).
 /www/editor is the rich text editor.
 /www/newfile.php is the XML-RPC publish program.
 /www/submit is the logon program.
