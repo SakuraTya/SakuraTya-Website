@@ -1,9 +1,9 @@
 <!DOCTYPE unspecified PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head><title>......</title></head>
+<head><title>登录</title></head>
 <body>
 <?php
-$users = file('/home/cat/userdata.csv');
+$users = file('/home/user/userdata.csv');
 $usersary = array();
 foreach ($users as $user) {
 	list($name, $pass) = explode(',', $user);
