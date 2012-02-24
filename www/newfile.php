@@ -5,7 +5,7 @@ $GLOBALS['xmlrpc_internalencoding'] = 'UTF-8';
 define ('DOMAIN', 'localhost'); // 博客的域名
 define ('BLOGID', 1); // 博客ID，一般为1
 define ('USER', 'admin'); // 博客登录的用户名
-define ('PASSWORD', '19990906c'); // 博客登录的密码
+define ('PASSWORD', 'secret'); // 博客登录的密码
 
 // 创建 xml-rpc client
 $cl = new xmlrpc_client ( "/xmlrpc.php", DOMAIN, 80);
