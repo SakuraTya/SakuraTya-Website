@@ -98,19 +98,6 @@ class acf_Field
 	{
 		
 	}
-	function acf_validation ($string, $mode='def') {
-		$_string = $string;
-		$_string = strip_tags($_string);
-		if ($mode == 'url'){
-			$_string = esc_url_raw($_string, 'http');
-		}
-		if ($_string == $string){
-			return true;
-		} else {
-			return false;
-		}
-	}
-	
 	/*--------------------------------------------------------------------------------------
 	*
 	*	update_value
@@ -122,31 +109,6 @@ class acf_Field
 	
 	function update_value($post_id, $field, $value)
 	{
-		global $wpdb;
-		$is_valid = FALSE;
-		$the_post = get_post($post_id);
-		//====================================================
-		if ($the_post->post_type == 'post'){
-			switch ($field['name']){
-				case 'preview':
-				case 'ddurl':
-					if ($this->acf_validation($value, 'url')) $is_valid = TRUE;
-					break;
-				case 'comment':
-					if ($this->acf_validation($value)) $is_valid = TRUE;
-					break;
-			}
-			//===================================================
-			//作者
-			$acf_author = get_userdata($the_post->post_author) ;
-			$acf_user_name = $acf_author->user_nicename;
-			$acf_user_email = $acf_author->user_email;
-			//执行插入查询
-			if ($is_valid) {
-				$sql = sprintf("INSERT INTO  `wp_acf` (`id` ,`post_id` ,`key` ,`value`)VALUES (NULL , '%d', '%s', '%s');", $post_id, $field['name'], $value);
-				$wpdb->query($sql);
-			}
-		}
 		update_post_meta($post_id, $field['name'], $value);
 		update_post_meta($post_id, '_' . $field['name'], $field['key']);
 	}
