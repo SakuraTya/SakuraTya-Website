@@ -30,8 +30,15 @@ function sakuratya_get_post_info($post_id){
 function sakuratya_show_favorites_page(){
 	global $wpdb;
 	global $table_prefix;
+	print_r($_GET);
+	switch ($_GET['action']){
+		case "del":
+			$query = "DELETE FROM `".$table_prefix."favorites` WHERE `post_id` = ".$_GET['id']." AND `user_id` = ".get_current_user_id();
+			$wpdb->query($query);
+	}
 	echo "<h1>收藏管理</h1>";
 	$query = "SELECT `post_id` FROM `".$table_prefix."favorites` WHERE `user_id` = ".get_current_user_id();
+	//echo $query."<br/>";
 	$result = $wpdb->get_results($query, ARRAY_A);
 	foreach($result as $post_id){
 		sakuratya_get_post_info($post_id['post_id']);
