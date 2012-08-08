@@ -109,14 +109,51 @@ div.group_header_bg {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#f4f4f4',GradientType=0 ); /* IE6-9 */
 }
 
-#nav_links_area {
-    width: 100%;
-    height: 171px;
-    margin: 0px;
-}
 #footer_bar {
     margin-top: 98px;
     width: 100%;
     height: 273px;
     background: url("../img/bottom-gradient.png") repeat-x;
+}
+
+#nav_links_area {
+    width: 1026px;
+    height: 171px;
+    margin: 16px auto 0px auto;
+}
+
+#nav_links_area ul {
+    display: block;
+    list-style-type: none;
+    float: left;
+    color: #ffffff;
+    padding-right: 50px;
+}
+
+#nav_links_area a {
+    color: #ffffff;
+}
+
+#nav_links_area ul li.list_title {
+    font-size: 1.3em;
+    display: block;
+    border-bottom: 1px solid #b39faa;
+    padding-bottom: 8px;
+    margin-bottom: 9px;
+}
+
+#nav_links_area ul li {
+    display: block;
+    padding-bottom: 8px;
+    line-height: 18px;
+    font-size: 0.9em;
+}
+
+#copyright_info {
+    text-align: center;
+    width: 100%;
+    clear: both;
+    margin-top: 70px;
+    color: #afafaf;
+    font-size: 0.9em;
 }

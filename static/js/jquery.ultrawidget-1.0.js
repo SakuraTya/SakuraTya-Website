@@ -74,7 +74,7 @@
                 }
 
                 return true;
-            })
+            });
             
             //bind events to holder
             var drop_down_wrapper = holder.children("div.drop_down_wrapper");
