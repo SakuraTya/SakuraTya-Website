@@ -1,60 +1,78 @@
 <?php
-function get_post_tags($id){
-	$query = "SELECT `term_taxonomy_id` FROM `wp_term_relationships`
-			WHERE `object_id`=".$id;
-	$wpdb->get_results($query, ARRAY_A);
-	$tags = array();
-	foreach ($wpdb->get_results($query, ARRAY_A)as $d){
-		$tid = $d['term_taxonomy_id'];
-		$query = "SELECT name, slug FROM `wp_terms` WHERE term_id=".$tid;
-		$result = $wpdb->get_results($query, ARRAY_A);
-		$tags[]=array_merge($result[0], array('url'=>'/?tag='.$result[0]['slug']));
+function get_post_views($postID){
+	$count_key = 'post_views_count';
+	$count = get_post_meta($postID, $count_key, true);
+	if($count==''){
+		delete_post_meta($postID, $count_key);
+		add_post_meta($postID, $count_key, '0');
+		return "0";
 	}
-	return $tags;
+	return $count;
 }
-function work_block($id){
+function is_favorite($post_id, $user_id){
 	global $wpdb;
-	if (!is_int($id)){return false;}
-	$post = get_post($id, ARRAY_A);
-	print_r($tags);
+	return !is_null($wpdb->get_var("SELECT * FROM `".FAV_NAME."` WHERE `user_id` = ".$user_id." AND `post_id` = ".$post_id));
+}
+function get_favorites($post_id){
+	//$r = get_post_meta($post_id, "favorited", true);
+	//if ($r == ""){return 0;}else{return $r;}
+	return 9;
+}
+function get_downloads($post_id){
+	$r = get_post_meta($post_id, "downloads", true);
+	if ($r ==""){return 0;}else{return $r;}
+}
+function work_block($post){
+	global $wpdb;
+	$id = $post->ID;
+	//$post = get_post($id, ARRAY_A);
+	$tags = get_the_tags($id);
+	//print_r($tags);
+	$dc=get_downloads($id);
+	$fc=get_favorites($id);
+	$ra = (int)((100 * log($post->comment_count,10)) + (200 * log($dc,10)) + (10 * sqrt(log(100,10))) - (((int)(time()/60/60/24) - (int)(strtotime($post->post_date)/60/60/24)) * ((int)(time()/60/60/24) - log((int)(strtotime($post->post_date)/60/60/24),10))));
 	?>
-<div id="work_id_<?php echo $post['id'];?>" class="works_panel">
+<div id="work_id_<?php echo $id;?>" class="works_panel">
 	<div class="work_content_wrapper">
 		<div class="preview_img_wrapper">
-			<a href="<?php echo $post['guid'];?>">
-				<img src="<?php //prev_img_small?>" />
+			<a href="<?php echo $post->guid;?>">
+				<img src="<?php get_field("preview", $id);?>" />
 			</a>
 				<div class="img_lightbox_controls">
-					<a href="<?php //prev_img_big?>" class="zoom_in_tool"></a>
+					<a href="<?php get_field("preview", $id);?>" class="zoom_in_tool"></a>
 				</div>
 		</div>
 		<div class="work_title">
-			<a href="<?php echo $post['guid'];?>" title="<?php echo $post['post_title'];?>"><?php echo $post['post_title'];?></a>
+			<a href="<?php echo $post->guid;?>" title="<?php echo $post->post_title.'['.$ra.']'.get_post_views($id);?>"><?php echo $post->post_title.'['.$ra.']';?></a>
 		</div>
         <div class="work_author">
 			<span>by</span>
-			<a href="<?php echo get_author_posts_url($post['post_author']);?>"><?php echo get_author_name($post['post_author']);?></a>
+			<a href="<?php echo get_author_posts_url($post->post_author);?>"><?php echo get_author_name($post->post_author);?></a>
 		</div>
 		<div class="work_tags">
 			<!-- data attribute in li element is tagID, the text is tagName -->
 			<ul>
-				<li data="<?php //tag id?>"><?php //tag name?></li>
+				<?php if($tags){?>
+					<?php foreach ($tags as $tag){?>
+					<li data="<?php echo $tag->term_id;?>"><?php echo $tag->name;?></li>
+					<?php }?>
+				<?php }?>
 				<div style="clear:both;display:block;"></div>
 			</ul>
 		</div>
 		<div class="work_panel_divider"></div>
 		<div class="statistics_show_wrapper">
-			<div class="statistics_downloads_wrapper" title="<?php //download_count?>次下载">
+			<div class="statistics_downloads_wrapper" title="<?php echo $dc;?>次下载">
 				<div class="downloads_icon"></div>
-					<span><?php //download_count?></span>
+					<span><?php echo $dc;?></span>
 			</div>
-		<div class="statistics_comments_wrapper" title="<?php //comment count?>条评论">
+		<div class="statistics_comments_wrapper" title="<?php echo $post->comment_count;?>条评论">
 			<div class="comments_icon"></div>
-			<span><?php //comment count?></span>
+			<span><?php echo $post->comment_count;?></span>
 		</div>
-		<div class="statistics_favorites_wrapper" title="<?php //favorite count?>次收藏">
+		<div class="statistics_favorites_wrapper" title="<?php echo $fc;?>次收藏">
 			<div class="favorites_icon"></div>
-			<span><?php //favorite count?></span>
+			<span><?php echo $fc;?></span>
 		</div>
 		</div>
 	</div>

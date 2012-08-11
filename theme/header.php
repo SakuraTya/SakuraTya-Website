@@ -43,4 +43,24 @@
 <script type="text/javascript" src="<?php echo $dir;?>js/jquery.lavalamp-1.3.5.min.js"></script>
 <script type="text/javascript" src="<?php echo $dir;?>js/jquery.ultrawidget-1.0.js"></script>
 <script type="text/javascript" src="<?php echo $dir;?>js/core.js"></script>
-<?php wp_head(); ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/index.css" />
+</head>
+<body>
+<!-- 头部 -->
+	<div id="header_bar">
+		<div id="header_wrapper">
+			<div id="logo"></div>
+			<div id="user_container_wrapper"></div>
+		</div>
+	</div>
+<!-- 导航菜单 -->
+	<div id="nav_menu_wrapper">
+		<ul id="nav_menu">
+			<li><a href="/">首页</a></li>
+			<li><a href="/themes">系统主题</a></li>
+			<li><a href="/skins">软件皮肤</a></li>
+			<li><a href="/icons-and-cursors">图标&amp;光标</a></li>
+			<li><a href="/paintings">绘画作品</a></li>
+		</ul>
+		<div style="clear:both;display:block"></div>
+	</div>
