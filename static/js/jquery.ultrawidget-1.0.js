@@ -283,14 +283,14 @@
                     params.click(tag_frame, event);
                 })
             });
-        })
+        });
     };
 
     $.fn.convertToButton = function(params) {
         params = $.extend({
             "width": null,
             "height" : null,
-            "click": function() { return true }
+            "click": function() { return false; }
         },params || {});
         return this.each(function() {
             var button_wrapper = $(this);
@@ -321,9 +321,8 @@
                     glow_layer.addClass("focused");
                 }
             }, function(event){
-                if(!isPressed) {
-                    glow_layer.removeClass("focused");
-                }
+                glow_layer.removeClass("focused");
+                shadow_layer.removeClass("pressed");
             }).click(function(event) {
                 event.preventDefault();
                 return params.click(event);
@@ -335,6 +334,19 @@
                 shadow_layer.removeClass("pressed");
             });
         });
-    }
+    };
 
+    /*
+     * Use to create paginator according the json or html list
+     *
+     */
+    $.fn.paginator = function(params) {
+         params = $.extend({
+            "totalPages": 0,
+            "currentPage:": 1,
+            "ajax":true
+         }, params || {});
+
+         // body...
+    }
  })(jQuery);

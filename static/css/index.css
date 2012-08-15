@@ -426,3 +426,8 @@ div.work_special_indicator {
     float: right;
     border-left: 1px solid #dfdfdf;
 }
+
+.category_paginater {
+    margin: 0px auto 0px auto !important;
+    width: 370px !important;
+}

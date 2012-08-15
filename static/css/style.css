@@ -127,11 +127,17 @@ div.group_header_bg {
     list-style-type: none;
     float: left;
     color: #ffffff;
-    padding-right: 50px;
+    padding-right: 80px;
 }
 
 #nav_links_area a {
     color: #ffffff;
+    text-decoration: none;
+}
+
+#nav_links_area a:hover {
+    color: #a6deea;
+    text-decoration: underline;
 }
 
 #nav_links_area ul li.list_title {
@@ -145,7 +151,6 @@ div.group_header_bg {
 #nav_links_area ul li {
     display: block;
     padding-bottom: 8px;
-    line-height: 18px;
     font-size: 0.9em;
 }
 
@@ -156,4 +161,9 @@ div.group_header_bg {
     margin-top: 70px;
     color: #afafaf;
     font-size: 0.9em;
+}
+
+#sns_link a {
+    display: inline-block;
+    padding-left: 22px;
 }
