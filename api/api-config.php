@@ -11,7 +11,3 @@
 
 /*引用WordPress配置文件*/
 require_once("../wp-config.php");
-/** 
- * 收藏表名
- */
-define('FAV_NAME', $table_prefix . "favorites");

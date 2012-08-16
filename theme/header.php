@@ -38,12 +38,14 @@
 <link rel="stylesheet" href="<?php echo get_stylesheet_uri(); ?>" type="text/css" media="screen" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
 <?php $dir = get_stylesheet_directory_uri()."/";?>
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/index.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/jquery.ultrawidget-1.0.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>fancybox/jquery.fancybox-1.3.4.css">
 <script type="text/javascript" src="<?php echo $dir;?>js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="<?php echo $dir;?>js/jquery.lavalamp-1.3.5.min.js"></script>
 <script type="text/javascript" src="<?php echo $dir;?>js/jquery.ultrawidget-1.0.js"></script>
+<script type="text/javascript" src="<?php echo $dir;?>js/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="<?php echo $dir;?>js/core.js"></script>
-<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/index.css" />
 </head>
 <body>
 <!-- 头部 -->

@@ -102,6 +102,7 @@
 				work_block($post);
 			} 
 			?>
+			<div style="clear:both;display:block;"></div>
             </div>
             <div class="page_navigator_holder">
                 <a id="new_more_content_button" class="more_content_button_wrapper" href="/category">
@@ -112,9 +113,6 @@
                 <div style="clear:both;display:block;"></div>
             </div>
         </div>
-        <div id="footer_bar">
-            <div id="nav_links_area">
-
-            </div>
-        </div>
+        <?php get_footer();?>
     </body>
+</html>

@@ -1,4 +1,27 @@
 <?php
+define('FAV_NAME', $table_prefix . "favorites");
+function rank_score_calc($post, $dc, $vc, $g){
+	date_default_timezone_set('Asia/Shanghai');
+	$cc = (int)$post->comment_count;
+	$dtm = new DateTime($post->post_modified);
+	$dtn = new DateTime();
+	$span = $dtn->diff($dtm)->days;
+	$score = (0.5*$dc + 0.3*$cc + 0.2*$vc)/(pow($span+2,$g));
+	return $score;
+}
+//@todo 须在单独文章显示页面放入set_post_views函数，统计浏览数
+function set_post_views($postID) {
+	$count_key = 'post_views_count';
+	$count = get_post_meta($postID, $count_key, true);
+	if($count==''){
+		$count = 0;
+		delete_post_meta($postID, $count_key);
+		add_post_meta($postID, $count_key, '0');
+	}else{
+		$count++;
+		update_post_meta($postID, $count_key, $count);
+	}
+}
 function get_post_views($postID){
 	$count_key = 'post_views_count';
 	$count = get_post_meta($postID, $count_key, true);
@@ -11,12 +34,11 @@ function get_post_views($postID){
 }
 function is_favorite($post_id, $user_id){
 	global $wpdb;
-	return !is_null($wpdb->get_var("SELECT * FROM `".FAV_NAME."` WHERE `user_id` = ".$user_id." AND `post_id` = ".$post_id));
+	return $wpdb->get_var("SELECT COUNT(*) FROM `".FAV_NAME."` WHERE `user_id` = ".$user_id." AND `post_id` = ".$post_id)!=0;
 }
 function get_favorites($post_id){
-	//$r = get_post_meta($post_id, "favorited", true);
-	//if ($r == ""){return 0;}else{return $r;}
-	return 9;
+	global $wpdb;
+	return $wpdb->get_var("SELECT COUNT(*) FROM `".FAV_NAME."` WHERE `post_id` = ".$post_id);
 }
 function get_downloads($post_id){
 	$r = get_post_meta($post_id, "downloads", true);
@@ -25,25 +47,33 @@ function get_downloads($post_id){
 function work_block($post){
 	global $wpdb;
 	$id = $post->ID;
-	//$post = get_post($id, ARRAY_A);
 	$tags = get_the_tags($id);
-	//print_r($tags);
 	$dc=get_downloads($id);
 	$fc=get_favorites($id);
-	$ra = (int)((100 * log($post->comment_count,10)) + (200 * log($dc,10)) + (10 * sqrt(log(100,10))) - (((int)(time()/60/60/24) - (int)(strtotime($post->post_date)/60/60/24)) * ((int)(time()/60/60/24) - log((int)(strtotime($post->post_date)/60/60/24),10))));
+	//@todo 排行榜每天0点更新，需在配置时写入crontab
+	if (function_exists('get_field')){
+		$aid = get_field('preview',$post_id);
+		if (!$aid == ""){
+			$a = wp_get_attachment_image_src($aid, array(240,180));
+			$b = wp_get_attachment_image_src($aid,'full');
+			$preview= $a[0];
+			$preview_big= $b[0];
+			unset($a);unset($b);
+		}
+	}
 	?>
 <div id="work_id_<?php echo $id;?>" class="works_panel">
 	<div class="work_content_wrapper">
 		<div class="preview_img_wrapper">
 			<a href="<?php echo $post->guid;?>">
-				<img src="<?php get_field("preview", $id);?>" />
+				<img src="<?php echo $preview;?>" />
 			</a>
 				<div class="img_lightbox_controls">
-					<a href="<?php get_field("preview", $id);?>" class="zoom_in_tool"></a>
+					<a href="<?php echo $preview_big;?>" class="zoom_in_tool"></a>
 				</div>
 		</div>
 		<div class="work_title">
-			<a href="<?php echo $post->guid;?>" title="<?php echo $post->post_title.'['.$ra.']'.get_post_views($id);?>"><?php echo $post->post_title.'['.$ra.']';?></a>
+			<a href="<?php echo $post->guid;?>" title="<?php echo $post->post_title;?>"><?php echo $post->post_title."(".rank_score_calc($post, $dc, get_post_views($id), 1).")";?></a>
 		</div>
         <div class="work_author">
 			<span>by</span>

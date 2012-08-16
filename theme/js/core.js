@@ -193,17 +193,23 @@ function convertTags() {
 }
 
 function layoutWorkPanel() {
+    //Add margins to work panel, but not the last one of each row.
     $(".works_panel_wrapper").children(".works_panel").each(function(index, item) {
         if( (index+1) % 4 != 0 ) {
             $(item).addClass("works_panel_margin");
         }
     });
+    //Add slide animation to preview image light box controls.
     $(".work_content_wrapper div.preview_img_wrapper").hover(function(event) {
         $(this).find("div.img_lightbox_controls").slideDown("fast");
     }, function(event) {
         $(this).find("div.img_lightbox_controls").slideUp("fast");
     });
+    //convert the more content link to a relief button.
     $(".more_content_button_wrapper").convertToButton();
+    //Apply FancyBox to light box controls
+    $(".zoom_in_tool").fancybox();
+
 }
 
 $(document).ready(function(){

@@ -13,8 +13,9 @@ if (!isset($_GET['id'])){
 	$json['status']=2;
 	output_json($json);
 }
+$post_id = $_GET['id'];
 if(!add_post_meta($post_id, "downloads", 0, true)){
-	update_post_meta($post_id, "downloads", get_post_meta($post_id, "liked", true) + 1);
+	update_post_meta($post_id, "downloads", get_post_meta($post_id, "downloads", true) + 1);
 }
 $json['status']=0;
 output_json($json);
