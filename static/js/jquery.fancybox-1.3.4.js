@@ -1,4 +1,4 @@
-﻿/*
+/*
  * FancyBox - jQuery Plugin
  * Simple and fancy lightbox alternative
  *
@@ -56,7 +56,7 @@
 			selectedOpts.width = 'auto';
 			selectedOpts.height = 'auto';
 
-			tmp.html( '<p id="fancybox-error">请求的资源不存在，<br />请稍后再试。</p>' );
+			tmp.html( '<p id="fancybox-error">The requested content cannot be loaded.<br />Please try again later.</p>' );
 
 			_process_inline();
 		},
