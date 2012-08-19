@@ -417,6 +417,10 @@ function convertTags() {
 }
 
 function layoutWorkPanel() {
+    // var getInt = function (pxValue) {
+    //     var pattern = /\d+/g;
+    //     return parseInt(pxValue.match(pattern)[0]);
+    // };
     //Add margins to work panel, but not the last one of each row.
     $(".works_panel_wrapper").children(".works_panel").each(function(index, item) {
         if( (index+1) % 4 != 0 ) {
@@ -434,6 +438,14 @@ function layoutWorkPanel() {
     //Apply FancyBox to light box controls
     $(".zoom_in_tool").fancybox();
 
+    var maxWords = 16;
+    // aa="Memories Off 7 秋之回忆7 打勾勾的记忆";
+    // console.log(aa.length);
+    // console.log(aa.substr(0, 16));
+    //trim the long title to fit the size of work panel
+    var workTitleWidth = $(".work_title").width();
+    
+    $(".work_title a").ellipsis({"width":workTitleWidth, "useContainerPadding": true, "useContainerMargin": false});
 }
 
 $(document).ready(function(){
