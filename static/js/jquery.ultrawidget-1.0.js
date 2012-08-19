@@ -342,33 +342,71 @@
      */
     $.fn.paginator = function(params) {
         params = $.extend({
-            "totalPages": 0,
+            "totalItems": 0,
+            "num_per_page": 16,
             "currentPage:": 0,
             "num_display_entries": 5,
+            "num_edge_entires": 1,
+            "prev_page_text": "Prev",
+            "next_page_text": "Next",
+            "ellipsis_text": "...",
             "ajax":true
          }, params || {});
+        if(params.totalItems<=0) {
+            return this;
+        }
+        function getTotalPages () {
+            return Math.ceil(params.totalItems / params.num_per_page);
+        }
         /**
          * Caculate start and end page num of paginatrion
          * @return {Array}
          */
         function getInterval () {
             var half = Math.ceil(params.num_display_entries / 2);
-            var upper_limit = params.totalPages - params.num_display_entries;
+            var totalPages = getTotalPages ();
+            var upper_limit = totalPages - params.num_display_entries;
             var start = params.currentPage > half ? Math.max(Math.min(params.currentPage - half, upper_limit), 0) : 0;
-            var end = params.currentPage > half ? Math.min(params.currentPage + half, params.totalPages) : Math.min(params.num_display_entries, params.totalPages);
+            var end = params.currentPage > half ? Math.min(params.currentPage + half, params.totalPages) : Math.min(params.num_display_entries, totalPages);
             return [start, end];
         }
 
         return this.each(function() {
             var paginator = $(this);
+            var interval = getInterval();
             function addPageButton(page_num, option) {
-                page_num = page_num > 0 ? ( page_num < params.totalPages ? page_num : params.totalPages-1) : 0;
+                var totalPages = getTotalPages();
+                page_num = page_num > 0 ? ( page_num < totalPages ? page_num : totalPages-1) : 0;
                 option =  $.extend({"text": page_num + 1, "class": "page_button_wrapper"});
                 //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
                 var pageButton = $("<a>").text(option.text).addClass(option.class).pageButton.attr("href", "#!/page/"+page_num+"/");
-                }
-
+                
+                paginator.append(pageButton);
             }
+
+            function generatePaginator () {
+                //Generate previous button
+                if(params.prev_page_text) {
+                    var option = {"text": params.prev_page_text};
+                    if(params.currentPage==0) {
+                        option.class = "page_button_wrapper disabled";
+                    }
+                    addPageButton(params.currentPage - 1, option);
+                }
+                //Generate first page and edge entries
+                if(interval[0]>0 && params.num_edge_entires > 0){
+                    var end = Math.min(interval[0], params.num_edge_entires);
+                    for(var i=0;i<end;i++) {
+                        addPageButton(i);
+                    }
+                    if(interval < params.num_edge_entires && params.ellipsis_text) {
+                        $("<span>"+params.ellipsis_text+"</span>").appendTo(paginator);
+                    }
+                }
+            }
+
+            
+
         });
     };
 
