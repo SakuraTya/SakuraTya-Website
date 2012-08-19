@@ -11,3 +11,4 @@
 
 /*引用WordPress配置文件*/
 require_once("../wp-config.php");
+?>
