@@ -1,4 +1,8 @@
 <?php get_header();?>
+<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri()."/";?>css/index.css" />
+</head>
+<body>
+<?php nav_menu();?>
         <div id="popular_works_show">
             <div id="popworks_group_header" class="group_header_bg">
                 <div id="popworks_group_label"></div>
