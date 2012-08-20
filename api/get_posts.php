@@ -70,11 +70,97 @@ switch ($_GET['mode']){
 					}
 				}
 				echo json_encode($return);
-			case 'week':break;
-			case 'month':break;
-			case '3months':break;
+				break;
+			case 'week':
+				add_filter('posts_where', 'filter_where_week');
+				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_week');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			case 'month':
+				add_filter('posts_where', 'filter_where_month');
+				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_month');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			case '3months':
+				add_filter('posts_where', 'filter_where_3months');
+				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_3months');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
 			default:die(json_encode(array('msg'=>'Invalid time span.')));
 		}
+		break;
+	case 'tag':
+		if(!isset($_GET['id'])){
+			die(json_encode(array('msg'=>'You should give this page the tag\'s ID(integer) by GET method.')));
+		}
+		$id=$_GET['id'];
+		$page=isset($_GET['page'])?$_GET['page']:1;
+		$time=isset($_GET['time'])?$_GET['time']:'all';
+		switch($time){
+			case 'all':
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			case 'week':
+				add_filter('posts_where', 'filter_where_week');
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_week');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			case 'month':
+				add_filter('posts_where', 'filter_where_month');
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_month');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			case '3months':
+				add_filter('posts_where', 'filter_where_3months');
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				remove_filter('posts_where', 'filter_where_3months');
+				if($query){
+					foreach ($query->posts as $post){
+						$return[]=post_json($post);
+					}
+				}
+				echo json_encode($return);
+				break;
+			default:die(json_encode(array('msg'=>'Invalid time span.')));
+		}
+		break;
+		default:die(json_encode(array('msg'=>'Invalid argument.')));
 }
 /*
  * $return = array();
