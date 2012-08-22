@@ -1,0 +1,1 @@
+{"note":"Don't delete this file! It's used internally to help with page regeneration.","tagline":"","name":"Sakuratya-website","google":"","body":"# API文档\r\n## 查询文章\r\n**调用方式：**/api/get_posts.php?mode=tag&id=1&time=all\r\n### 参数说明\r\n* **mode** 查询模式，category(分类)或tag(标签)\r\n* **id** 分类ID或标签ID\r\n* **time** 时间范围(all:全部时间,week:最近一周,month:最近31天,3months:最近93天)\r\n\r\n"}
