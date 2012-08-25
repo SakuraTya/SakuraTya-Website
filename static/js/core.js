@@ -183,20 +183,31 @@ function dropDownTagsSelectorForPop() {
     });
 }
 
-function convertTags() {
-    $(".work_tags, #tags_selector_for_pop, #tags_selector_for_new").convertToTags({
-        "click":function(tag_frame, event){
-            var data = tag_frame.attr("data");
-            console.log(data);
+function page_handle (page_num, paginator) {
+    // console.log(paginator);
+    paginator.goToPage(page_num);
+    $(".page_button_wrapper").convertToButton();
+    var paginator_width = 0;
+    paginator.children().each(function() {
+        var child = $(this);
+        
+        if(child.hasClass("page_ellipsis_wrapper")) {
+            paginator_width+= child.width() + 21;
+        } else {
+            paginator_width+= child.width()+8;
         }
+        // console.log(paginator_width);
     });
+    paginator_width += 20;
+    // console.log(paginator_width);
+    paginator.css({"width":  paginator_width+"px", "margin-left": "auto", "margin-right": "auto"});
 }
 
 function layoutWorkPanel() {
-    // var getInt = function (pxValue) {
-    //     var pattern = /\d+/g;
-    //     return parseInt(pxValue.match(pattern)[0]);
-    // };
+    var getInt = function (pxValue) {
+        var pattern = /\d+/g;
+        return parseInt(pxValue.match(pattern)[0]);
+    };
     //Add margins to work panel, but not the last one of each row.
     $(".works_panel_wrapper").children(".works_panel").each(function(index, item) {
         if( (index+1) % 4 != 0 ) {
@@ -215,13 +226,50 @@ function layoutWorkPanel() {
     $(".zoom_in_tool").fancybox();
 
     var maxWords = 16;
-    // aa="Memories Off 7 秋之回忆7 打勾勾的记忆";
-    // console.log(aa.length);
-    // console.log(aa.substr(0, 16));
     //trim the long title to fit the size of work panel
     var workTitleWidth = $(".work_title").width();
     
     $(".work_title a").ellipsis({"width":workTitleWidth, "useContainerPadding": true, "useContainerMargin": false});
+
+    $(".category_paginater").paginator({
+        "totalItems": 500,
+        "num_per_page": 16,
+        "currentPage": 0,
+        "num_display_entries": 5,
+        "num_edge_entires": 1,
+        "prev_page_text": "上一页",
+        "next_page_text": "下一页",
+        "ellipsis_text": "...",
+        "callback": page_handle,
+        "ajax": true
+    });
+    $(".page_button_wrapper").convertToButton();
+    
+    $(".category_paginater").each(function(){
+        var paginator_width = 0;
+        $(this).children().each(function() {
+            var child = $(this);
+            
+            if(child.hasClass("page_ellipsis_wrapper")) {
+                paginator_width+= child.width() + 21;
+            } else {
+                paginator_width+= child.width()+8;
+            }
+            // console.log(paginator_width);
+        });
+        paginator_width += 20;
+        // console.log(paginator_width);
+        $(this).css({"width":  paginator_width+"px", "margin-left": "auto", "margin-right": "auto"});
+    });
+    
+
+    //convert tags
+    $(".work_tags, #tags_selector_for_pop, #tags_selector_for_new").convertToTags({
+        "click":function(tag_frame, event){
+            var data = tag_frame.attr("data");
+            console.log(data);
+        }
+    });
 }
 
 $(document).ready(function(){
@@ -230,5 +278,4 @@ $(document).ready(function(){
     dropDownTimeSelectorForPop();
     dropDownPlatformSelectorForPop();
     dropDownTagsSelectorForPop();
-    convertTags();
 });

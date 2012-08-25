@@ -175,3 +175,65 @@ div.button_shadow_layer.pressed {
     background: #dbdbdb;
     border: 1px solid #cccccc;
 }
+
+div.button_shadow_layer_disabled {
+    border: 1px solid #dcdcdc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+}
+div.button_glow_layer_disabled {
+    border: 1px solid #f7f7f7;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #eeeeee;
+}
+div.button_shadow_layer_selected {
+    border: 1px solid #cccccc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-color: #dbdbdb;
+}
+
+div.button_glow_layer_selected {
+    border: 1px solid#ffffff;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+
+.page_button_wrapper {
+    display: block;
+    float: left;
+    position: relative;
+    margin-right: 8px;
+}
+
+.page_button_wrapper.disabled, .page_button_wrapper.selected {
+    cursor: default;
+}
+
+.page_button_wrapper.disabled span {
+    color: #d1d1d1 !important;
+}
+.page_button_wrapper span {
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.page_ellipsis_wrapper {
+    display: block;
+    float: left;
+    margin-right: 8px;
+    margin-left: 3px;
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
+}

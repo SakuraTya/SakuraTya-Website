@@ -290,31 +290,48 @@
         params = $.extend({
             "width": null,
             "height" : null,
-            "click": function() { return false; }
+            "click": null
         },params || {});
         return this.each(function() {
             var button_wrapper = $(this);
-            if( !params.width ) {
-                params.width = button_wrapper.width();
+            var width = params.width;
+            var height = params.height;
+            if( !width ) {
+                width = button_wrapper.width();
             }
-            if( !params.height) {
-                params.height = button_wrapper.height();
+            if( !height) {
+                height = button_wrapper.height();
             }
             var childElements = button_wrapper.children().detach();
-            var glow_layer = $("<div>").addClass("button_glow_layer");
-            glow_layer.css({
-                "width": params.width,
-                "height": params.height
+            var glow_layer = $("<div>").css({
+                "width": width,
+                "height": height
+            });;
+            var shadow_layer = $("<div>").css({
+                "width": width,
+                "height": height
             });
-            button_wrapper.append(glow_layer);
-            var shadow_layer = $("<div>").addClass("button_shadow_layer");
-            shadow_layer.css({
-                "width": params.width,
-                "height": params.height
-            });
+            if(button_wrapper.hasClass("selected")) {
+                glow_layer.addClass("button_glow_layer_selected");
+                shadow_layer.addClass("button_shadow_layer_selected");
+            } else if(button_wrapper.hasClass("disabled")) {
+                glow_layer.addClass("button_glow_layer_disabled");
+                shadow_layer.addClass("button_shadow_layer_disabled");
+            } else {
+                glow_layer.addClass("button_glow_layer");
+                shadow_layer.addClass("button_shadow_layer");
+            }
+            button_wrapper.append(glow_layer);            
             glow_layer.append(shadow_layer);
             shadow_layer.append(childElements);
-
+            button_wrapper.css({
+                "width": width,
+                "height": height
+            });
+            //if button has disabled class or selected class, do not bind any event handler.
+            if(button_wrapper.hasClass("selected") || button_wrapper.hasClass("disabled")) {
+                return;
+            }
             var isPressed = false;
             button_wrapper.hover(function(event) {
                 if(!isPressed) {
@@ -323,9 +340,6 @@
             }, function(event){
                 glow_layer.removeClass("focused");
                 shadow_layer.removeClass("pressed");
-            }).click(function(event) {
-                event.preventDefault();
-                return params.click(event);
             }).mousedown(function(event) {
                 isPressed = true;
                 shadow_layer.addClass("pressed");
@@ -333,6 +347,12 @@
                 isPressed = false;
                 shadow_layer.removeClass("pressed");
             });
+            if(params.click && typeof(params.click)=="function") {
+                button_wrapper.click(function(event) {
+                    event.preventDefault();
+                    return params.click(event);
+                })
+            }
         });
     };
 
@@ -344,13 +364,15 @@
         params = $.extend({
             "totalItems": 0,
             "num_per_page": 16,
-            "currentPage:": 0,
+            "currentPage": 0,
             "num_display_entries": 5,
             "num_edge_entires": 1,
             "prev_page_text": "Prev",
             "next_page_text": "Next",
             "ellipsis_text": "...",
-            "ajax":true
+            "callback": function() { return false },
+            "ajax": true,
+            "container_align_center": true
          }, params || {});
         if(params.totalItems<=0) {
             return this;
@@ -362,36 +384,58 @@
          * Caculate start and end page num of paginatrion
          * @return {Array}
          */
-        function getInterval () {
+        function getInterval (current_page) {
             var half = Math.ceil(params.num_display_entries / 2);
             var totalPages = getTotalPages ();
             var upper_limit = totalPages - params.num_display_entries;
-            var start = params.currentPage > half ? Math.max(Math.min(params.currentPage - half, upper_limit), 0) : 0;
-            var end = params.currentPage > half ? Math.min(params.currentPage + half, params.totalPages) : Math.min(params.num_display_entries, totalPages);
+            var start = current_page > half ? Math.max(Math.min(current_page - half, upper_limit), 0) : 0;
+            var end = current_page > half ? Math.min(current_page + half, totalPages) : Math.min(params.num_display_entries, totalPages);
             return [start, end];
+        }
+
+        function handleClick(event, page_num, paginator) {
+            if(params.ajax) {
+                event.preventDefault();
+            }
+            console.log(paginator);
+            params.callback(page_num, paginator);
+            
         }
 
         return this.each(function() {
             var paginator = $(this);
-            var interval = getInterval();
+            
+            var totalPages = getTotalPages();
+            // This helper function returns a handler function that calls pageSelected with the right page_id
+            var getClickHandler = function(page_num) {
+                return function(evt){ return handleClick(event, page_num, paginator);}
+            }
             function addPageButton(page_num, option) {
-                var totalPages = getTotalPages();
-                page_num = page_num > 0 ? ( page_num < totalPages ? page_num : totalPages-1) : 0;
-                option =  $.extend({"text": page_num + 1, "class": "page_button_wrapper"});
-                //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
-                var pageButton = $("<a>").text(option.text).addClass(option.class).pageButton.attr("href", "#!/page/"+page_num+"/");
                 
+                page_num = page_num > 0 ? ( page_num < totalPages ? page_num : totalPages-1) : 0;
+                option =  $.extend({"text": page_num + 1, "class": "page_button_wrapper"}, option || {});
+                // console.log(option.text+"   "+option.class);
+                //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
+                var pageButton = $("<a>").addClass(option.class).attr("href", "#!/page/"+page_num+"/");
+                pageButton.bind("click", getClickHandler(page_num));
+                var textWrapper = $("<span>").text(option.text);
+                pageButton.append(textWrapper);
                 paginator.append(pageButton);
             }
-
-            function generatePaginator () {
+            /*
+             * Use to generate paginator.
+             */
+            function generatePaginator (current_page) {
+                var width = 0;
+                var interval = getInterval(current_page);
+                paginator.empty();
                 //Generate previous button
                 if(params.prev_page_text) {
                     var option = {"text": params.prev_page_text};
-                    if(params.currentPage==0) {
+                    if(current_page==0) {
                         option.class = "page_button_wrapper disabled";
                     }
-                    addPageButton(params.currentPage - 1, option);
+                    addPageButton(current_page - 1, option);
                 }
                 //Generate first page and edge entries
                 if(interval[0]>0 && params.num_edge_entires > 0){
@@ -399,14 +443,52 @@
                     for(var i=0;i<end;i++) {
                         addPageButton(i);
                     }
-                    if(interval < params.num_edge_entires && params.ellipsis_text) {
-                        $("<span>"+params.ellipsis_text+"</span>").appendTo(paginator);
+                    if(interval[0] > params.num_edge_entires && params.ellipsis_text) {
+                        var ellipsisWrapper = $("<span>"+params.ellipsis_text+"</span>").addClass("page_ellipsis_wrapper");
+                        ellipsisWrapper.appendTo(paginator);
                     }
                 }
+                //Generate interval (displayed pages) page buttons
+                for(var i=interval[0]; i<interval[1]; i++) {
+                    if(i==current_page) {
+                        addPageButton(i, {"class": "page_button_wrapper selected"});
+                    } else {
+                        addPageButton(i);
+                    }
+                }
+                //Generate last page and edge entries
+                if(interval[1] < totalPages && params.num_edge_entires > 0 ) {
+                    if(totalPages - params.num_edge_entires > interval[1] && params.ellipsis_text) {
+                        var ellipsisWrapper = $("<span>"+params.ellipsis_text+"</span>").addClass("page_ellipsis_wrapper");
+                        ellipsisWrapper.appendTo(paginator);
+                    }
+                    var begin = Math.max(totalPages - params.num_edge_entires, interval[1]);
+                    for(var i=begin; i<totalPages; i++) {
+                        addPageButton(i);
+                    }
+                }
+                //Generate next page buton.
+                if(params.next_page_text) {
+                    var option = {"text": params.next_page_text};
+                    if(current_page==totalPages-1) {
+                        option.class="page_button_wrapper disabled";
+                    }
+                    addPageButton(current_page + 1, option);
+                }
+                var container_float = paginator.css("float");
+                if(container_float=="none") {
+                    $("<div>").css({"display": "block", "clear":"both","width": "1px"}).appendTo(paginator);
+                }
             }
-
+            var current_page = params.currentPage;
             
-
+            //add controls to this
+            paginator.goToPage = function(page_num) {
+                if(typeof(page_num)=="number") {
+                    generatePaginator(page_num);
+                }
+            }
+            generatePaginator(current_page);
         });
     };
 
