@@ -33,7 +33,7 @@
      */
     var getInt = function (pxValue) {
         var pattern = /\d+/g;
-        return pxValue.match(pattern)[0];
+        return parseInt(pxValue.match(pattern)[0]);
     };
 
     $.fn.jDropDownControl = function(params) {
@@ -261,13 +261,13 @@
         return this.each(function() {
             $(this).find(params.targetFrame).each(function(index, item){
                 var tag_frame = $(item).addClass("tag_frame");
-                var tag_name = tag_frame.text();
+                var tag_name = tag_frame.first().text();
                 var tag_left = $("<div>").addClass("left_frame");
                 //clean the text node of the taget element
                 tag_frame.empty();
                 //if give a max words limitation. we trim the words over maxWords. and add "...". add a title
                 //attribute to tag_frame.
-                if(params.maxWords>0 && tag_name!=""){
+                if(params.maxWords>0 && tag_name!="" && tag_name.length > params.maxWords){
                     tag_frame.attr("title", tag_name);
                     tag_name = tag_name.substr(0, params.maxWords) + "...";   
                 }
@@ -338,15 +338,136 @@
 
     /*
      * Use to create paginator according the json or html list
-     *
+     * 
      */
     $.fn.paginator = function(params) {
-         params = $.extend({
-            "totalPages": 0,
-            "currentPage:": 1,
+        params = $.extend({
+            "totalItems": 0,
+            "num_per_page": 16,
+            "currentPage:": 0,
+            "num_display_entries": 5,
+            "num_edge_entires": 1,
+            "prev_page_text": "Prev",
+            "next_page_text": "Next",
+            "ellipsis_text": "...",
             "ajax":true
          }, params || {});
+        if(params.totalItems<=0) {
+            return this;
+        }
+        function getTotalPages () {
+            return Math.ceil(params.totalItems / params.num_per_page);
+        }
+        /**
+         * Caculate start and end page num of paginatrion
+         * @return {Array}
+         */
+        function getInterval () {
+            var half = Math.ceil(params.num_display_entries / 2);
+            var totalPages = getTotalPages ();
+            var upper_limit = totalPages - params.num_display_entries;
+            var start = params.currentPage > half ? Math.max(Math.min(params.currentPage - half, upper_limit), 0) : 0;
+            var end = params.currentPage > half ? Math.min(params.currentPage + half, params.totalPages) : Math.min(params.num_display_entries, totalPages);
+            return [start, end];
+        }
 
-         // body...
+        return this.each(function() {
+            var paginator = $(this);
+            var interval = getInterval();
+            function addPageButton(page_num, option) {
+                var totalPages = getTotalPages();
+                page_num = page_num > 0 ? ( page_num < totalPages ? page_num : totalPages-1) : 0;
+                option =  $.extend({"text": page_num + 1, "class": "page_button_wrapper"});
+                //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
+                var pageButton = $("<a>").text(option.text).addClass(option.class).pageButton.attr("href", "#!/page/"+page_num+"/");
+                
+                paginator.append(pageButton);
+            }
+
+            function generatePaginator () {
+                //Generate previous button
+                if(params.prev_page_text) {
+                    var option = {"text": params.prev_page_text};
+                    if(params.currentPage==0) {
+                        option.class = "page_button_wrapper disabled";
+                    }
+                    addPageButton(params.currentPage - 1, option);
+                }
+                //Generate first page and edge entries
+                if(interval[0]>0 && params.num_edge_entires > 0){
+                    var end = Math.min(interval[0], params.num_edge_entires);
+                    for(var i=0;i<end;i++) {
+                        addPageButton(i);
+                    }
+                    if(interval < params.num_edge_entires && params.ellipsis_text) {
+                        $("<span>"+params.ellipsis_text+"</span>").appendTo(paginator);
+                    }
+                }
+            }
+
+            
+
+        });
+    };
+
+    /**
+     * 
+     */
+    $.fn.ellipsis = function(params){ 
+        params = $.extend({
+            "width": null,
+            "num": null,
+            "useContainerPadding": true,
+            "useContainerMargin": true,
+            "padding": 0,
+            "margin": 0
+        }, params || {});
+
+        this.each(function(){
+            var copyThis = $(this.cloneNode(true)).hide().css({
+                'position': 'absolute',
+                'width': 'auto',
+                'overflow': 'visible'
+            }); 
+            if(params.useContainerPadding){
+                params.padding = getInt($(this).css("padding-left")) + getInt($(this).css("padding-right"));    
+            }
+            if(params.useContainerMargin) {
+                params.margin = getInt($(this).css("margin-left")) + getInt($(this).css("margin-right"));
+            }
+            var thisText = $.trim($(this).text());
+            if(params.width){
+                var measuredWidth = params.width - params.padding - params.margin;
+                $(this).after(copyThis);
+                if(copyThis.width() > measuredWidth){
+                    $(this).text(thisText.substring(0,thisText.length-4));
+                    $(this).html($(this).html()+'...');
+                    copyThis.remove();
+                    $(this).ellipsis({"width":params.width});
+                }else{
+                    copyThis.remove(); 
+                    return;
+                }   
+            }else if(params.num) {
+                var maxwidth=params.num;
+                
+                if(thisText.length>maxwidth){
+                    $(this).text(thisText.substring(0,maxwidth));
+                    $(this).html($(this).html()+'...');
+                }
+            } else {
+                var measuredWidth = $(this).width() - params.padding - params.margin;
+                $(this).after(copyThis);
+                if(copyThis.width()>measuredWidth){
+                    $(this).text(thisText.substring(0,thisText.length-4));
+                    $(this).html($(this).html()+'...');
+                    copyThis.remove();
+                    $(this).ellipsis();
+                }else{
+                    copyThis.remove(); 
+                    return;
+                }
+            }                    
+        });
     }
  })(jQuery);

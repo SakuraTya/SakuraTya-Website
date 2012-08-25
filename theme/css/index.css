@@ -195,6 +195,8 @@
     padding: 0px 11px 0px 11px;
     line-height: 35px;
     color: #156bcb;
+    white-space: nowrap;
+    overflow: hidden;
 }
 .work_content_wrapper div.work_title a:hover {
     color: #1e90d1;
@@ -231,7 +233,7 @@
 }
 
 .work_content_wrapper div.work_tags ul {
-    width: 100%;
+    width: 94%;
     height: 100%;
     margin: 6px 8px 3px 8px;
     padding: 0px;
