@@ -1,0 +1,140 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/detail.css">
+        <link rel="stylesheet" type="text/css" href="css/jquery.ultrawidget-1.0.css">
+        <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox-1.3.4.css">
+        <script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.lavalamp-1.4.min.js"></script>
+        <script type="text/javascript" src="js/jquery.ultrawidget-1.0.js"></script>
+        <script type="text/javascript" src="js/jquery.fancybox-1.3.4.pack.js"></script>
+        <script type="text/javascript" src="js/core.js"></script>
+        <script type="text/javascript" src="js/detail.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var global_StartItem = 1; //this javascript variable need to convert to php variable.
+                navMenuBuilding(global_StartItem);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="header_bar">
+            <div id="header_wrapper">
+                <div id="logo">
+                </div>
+                <div id="user_container_wrapper"></div>
+            </div>
+        </div>
+        <div id="nav_menu_wrapper">
+            <ul id="nav_menu">
+                <li><a href="/">首页</a></li>
+                <li><a href="/themes">系统主题</a></li>
+                <li><a href="/skins">软件皮肤</a></li>
+                <li><a href="/icons-and-cursors">图标&amp;光标</a></li>
+                <li><a href="/paintings">绘画作品</a></li>
+            </ul>
+            <div style="clear:both;display:block"></div>
+        </div>
+        <div class="main_content_wrapper">
+            <div id="detail_header" class="group_header_bg">
+                <div id="detail_title" class="title_wrapper">
+                    <div class="title_wrapper_left"></div>
+                    <div class="title_content"><span>Memories Off 7 秋之回忆 7 打勾勾的回忆</span></div>
+                    <div class="title_wrapper_right"></div>
+                </div>
+                <!-- this link should be modifed according to the article's category and sub category -->
+                <div id="detail_category" class="detail_properties_link"><a href="">系统主题</a></div>
+                <div id="detail_subcategory" class="detail_properties_link"><a href="">Windows 7</a></div>
+            </div>
+            <div id="work_content_wrapper">
+            </div>
+            <div id="work_info_wrapper">
+                <div id="author_info">
+                    <!-- The href property of #author_avatar_wrapper and #author_name is both the author profile page's url -->
+                    <a id="author_avatar_wrapper" href=""><img src="img/avatar.jpg" /></a>
+                    <a id="author_name" href="">星月战隼</a>
+                    <div id="author_sign">这个世界上没有奇迹，有的只是必然和偶然，还有谁做了什么……</div>
+                    <div id="author_function_wrapper"></div>
+                    <div class="info_section_label">
+                        <div id="info_label_author"></div>
+                        <div class="info_section_divider"></div>
+                    </div>
+                </div>
+                <div id="project_info">
+                    <div id="project_brief">
+                        <span>发表于：2011年9月28日</span>
+                        <span>查看：4480</span>
+                        <span>评论：160</span>
+                    </div>
+                    <!-- This button need ajax load the real download link -->
+                    <div id="project_download_button">
+                        <div id="download_icon"></div>
+                        <span class="button_title">查看下载地址</span>
+                        <span class="button_desc">已下载3801次</span>
+                    </div>
+                    <div id="project_favorite_button">
+                        <div id="favorite_icon"></div>
+                        <span class="button_title">收藏这个作品</span>
+                        <span class="button_desc">收藏次数1080次</span>
+                    </div>
+                    <div class="info_section_label">
+                        <div id="info_label_project"></div>
+                        <div class="info_section_divider"></div>
+                    </div>
+                </div>
+                <div id="work_tags">
+                    <ul id="work_tags_list">
+                        <!-- work_tags are dynamically generated -->
+                    </ul>
+                    <div class="info_section_label">
+                        <div id="info_label_tags"></div>
+                        <div class="info_section_divider"></div>
+                    </div>
+                </div>
+                <div id="share_buttons">
+                    <div id="share_buttons_wrapper">
+                        <!-- Place share buttons here -->
+                    </div>
+                    <div class="info_section_label">
+                        <div id="info_label_share"></div>
+                        <div class="info_section_divider"></div>
+                    </div>
+                </div>
+            </div>
+            <div style="display:block;clear:both;"></div>
+        </div>
+        
+        <div id="footer_bar">
+            <div id="nav_links_area">
+                <ul id="about_us_list">
+                    <li class="list_title">关于我们</li>
+                    <li><a href="">关于樱茶</a></li>
+                    <li><a href="">关于樱茶幻萌组</a></li>
+                    <li><a href="">加入樱茶</a></li>
+                    <li><a href="">版权投诉</a></li>
+                </ul>
+                <ul id="user_help_list">
+                    <li class="list_title">使用帮助</li>
+                    <li><a href="">隐私政策</a></li>
+                    <li><a href="">发布作品指南</a></li>
+                    <li><a href="">站点地图</a></li>
+                    <li><a href="">社区守则</a></li>
+                </ul>
+                <ul id="blog_update">
+                    <li class="list_title">樱茶blog</li>
+                </ul>
+                <ul id="sns_link">
+                    <li class="list_title">关注樱茶</li>
+                    <li style="background:url('img/icon_twitter.png') no-repeat;line-height:18px;"><a href="">Twitter</a></li>
+                    <li style="background:url('img/icon_gplus.png') no-repeat;line-height:18px;"><a href="">Google+</a></li>
+                    <li style="background:url('img/icon_weibo.png') no-repeat;line-height:18px;"><a href="">新浪微博</a></li>
+                    <li style="background:url('img/icon_qweibo.png') no-repeat;line-height:18px;"><a href="">腾讯微博</a></li>
+                </ul>
+                <div style="clear:both;display:block;"></div>
+            </div>
+            <div id="copyright_info">© SakuraTya 2012 All Rights Received.</div>
+        </div>
+    </body>
+</html>
