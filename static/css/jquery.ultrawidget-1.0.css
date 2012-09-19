@@ -198,7 +198,7 @@ div.button_shadow_layer_selected {
 }
 
 div.button_glow_layer_selected {
-    border: 1px solid#ffffff;
+    border: 1px solid #ffffff;
     position: absolute;
     top: 0px;
     left: 0px;

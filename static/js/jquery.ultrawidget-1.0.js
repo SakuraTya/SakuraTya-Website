@@ -32,8 +32,14 @@
      * If you have a menu already created. your should place all data that not shown in an attribute "data" of each <li> element.
      */
     var getInt = function (pxValue) {
-        var pattern = /\d+/g;
-        return parseInt(pxValue.match(pattern)[0]);
+        if(typeof(pxValue)=="string") {
+            var pattern = /\d+/g;
+            return parseInt(pxValue.match(pattern)[0]);    
+        } else if(typeof(pxValue)=="number") {
+            return pxValue;
+        } else {
+            return null;
+        }
     };
 
     $.fn.jDropDownControl = function(params) {
@@ -302,14 +308,20 @@
             if( !height) {
                 height = button_wrapper.height();
             }
+            width = getInt(width) + 1;
+            height = getInt(height) + 1;
+            button_wrapper.css({
+                "width": width + "px",
+                "height": height + "px"
+            });
             var childElements = button_wrapper.children().detach();
             var glow_layer = $("<div>").css({
-                "width": width,
-                "height": height
+                "width": width + "px",
+                "height": height + "px"
             });;
             var shadow_layer = $("<div>").css({
-                "width": width,
-                "height": height
+                "width": width + "px",
+                "height": height + "px",
             });
             if(button_wrapper.hasClass("selected")) {
                 glow_layer.addClass("button_glow_layer_selected");
@@ -324,10 +336,6 @@
             button_wrapper.append(glow_layer);            
             glow_layer.append(shadow_layer);
             shadow_layer.append(childElements);
-            button_wrapper.css({
-                "width": width,
-                "height": height
-            });
             //if button has disabled class or selected class, do not bind any event handler.
             if(button_wrapper.hasClass("selected") || button_wrapper.hasClass("disabled")) {
                 return;
@@ -397,7 +405,7 @@
             if(params.ajax) {
                 event.preventDefault();
             }
-            console.log(paginator);
+            // console.log(paginator);
             params.callback(page_num, paginator);
             
         }
@@ -407,8 +415,8 @@
             
             var totalPages = getTotalPages();
             // This helper function returns a handler function that calls pageSelected with the right page_id
-            var getClickHandler = function(page_num) {
-                return function(evt){ return handleClick(event, page_num, paginator);}
+            var getClickHandler = function(evt, page_num) {
+                return function(evt){ return handleClick(evt, page_num, paginator);}
             }
             function addPageButton(page_num, option) {
                 
@@ -417,7 +425,7 @@
                 // console.log(option.text+"   "+option.class);
                 //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
                 var pageButton = $("<a>").addClass(option.class).attr("href", "#!/page/"+page_num+"/");
-                pageButton.bind("click", getClickHandler(page_num));
+                pageButton.bind("click", getClickHandler(event, page_num));
                 var textWrapper = $("<span>").text(option.text);
                 pageButton.append(textWrapper);
                 paginator.append(pageButton);
@@ -505,11 +513,12 @@
             "margin": 0
         }, params || {});
 
-        this.each(function(){
+        return this.each(function(){
             var copyThis = $(this.cloneNode(true)).hide().css({
                 'position': 'absolute',
                 'width': 'auto',
-                'overflow': 'visible'
+                'overflow': 'visible',
+                'white-space': 'nowrap'
             }); 
             if(params.useContainerPadding){
                 params.padding = getInt($(this).css("padding-left")) + getInt($(this).css("padding-right"));    
