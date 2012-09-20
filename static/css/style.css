@@ -62,7 +62,7 @@ a {
     position: relative;
     list-style-type: none;
     padding: 0px;
-    overflow: auto;
+    overflow: visible;
 }
 #nav_menu li {
     display: block;

@@ -6,18 +6,23 @@ function navMenuBuilding(currentItem) {
         },
         "starItem" : currentItem,
         "returnStart": function(homeElement) {
-            $("#nav_menu").find("a").each(function(){
-                $(this).removeClass("hot");
-            });
+            $("#nav_menu").children().each(function() {
+                if(!$(this).hasClass("selectedLava")){
+                    $(this).children().removeClass("hot");
+                }
+            })
         },
         "returnFinish": function(homeElement) {
             var homeAnchor = homeElement.children("a");
             homeAnchor.addClass("hot");
         },
         "hoverStart": function(hoverElement) {
-            $("#nav_menu").find("a").each(function(){
-                $(this).removeClass("hot");
-            });
+            if(hoverElement!=null && hoverElement.hasClass("selectedLava")){
+                return;
+            }
+            $("#nav_menu").children().each(function() {
+                    $(this).children().removeClass("hot");
+            })
         },
         "hoverFinish": function(hoverElement) {
             var hoverAnchor = hoverElement.children("a");

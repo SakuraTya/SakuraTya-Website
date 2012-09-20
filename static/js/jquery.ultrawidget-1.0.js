@@ -292,6 +292,10 @@
         });
     };
 
+    /**
+     * Generate a reilef effect button without using any picture.
+     * This plugin use orginal button width or params.width
+     */
     $.fn.convertToButton = function(params) {
         params = $.extend({
             "width": null,
