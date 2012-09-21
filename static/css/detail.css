@@ -5,7 +5,7 @@
 
 #detail_header {
     margin-bottom: 8px;
-    clear: both;
+    float: left;
 }
 
 .title_wrapper {
@@ -229,6 +229,15 @@
     height: 15px;
     background: url("../img/spirite.png") no-repeat;
     background-position: -86px -140px;
+}
+
+#work_tags {
+    margin-top: 14px;
+}
+
+#work_tags_list {
+    margin: 0px 6px 0px 12px;
+    padding: 0px;
 }
 
 #info_label_tags {

@@ -85,7 +85,7 @@ function dropDownTagsSelectorForPop() {
 function page_handle (page_num, paginator) {
     // console.log(paginator);
     paginator.goToPage(page_num);
-    $(".page_button_wrapper").convertToButton();
+    paginator.children(".page_button_wrapper").convertToButton();
     var paginator_width = 0;
     paginator.children().each(function() {
         var child = $(this);
@@ -122,7 +122,17 @@ function layoutWorkPanel() {
     //convert the more content link to a relief button.
     $(".more_content_button_wrapper").convertToButton();
     //Apply FancyBox to light box controls
-    $(".zoom_in_tool").fancybox();
+    //This version have bug, so, make sure have helpers property like this.
+    $(".zoom_in_tool").fancybox({
+        "closeClick": true,
+        "helpers": {
+            "overlay": {
+                "css": {
+                    "overflow": "hidden"
+                }
+            }
+        }
+    });
 
     var maxWords = 16;
     //trim the long title to fit the size of work panel
