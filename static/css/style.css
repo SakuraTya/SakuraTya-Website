@@ -5,7 +5,8 @@
  */
 
 body {
-    margin: 0;
+    margin: 0px;
+    padding: 0px;
     width: 100%;
     background: #f0f0f0;
     font-family: "Geneva","微软雅黑","幼圆",Sans-serif;
@@ -35,7 +36,7 @@ a {
 
 #header_wrapper {
     margin: 0px auto 0px auto;
-    width: 1024px;
+    width: 1026px;
     height: 100%;
 }
 
@@ -52,7 +53,7 @@ a {
 
 #nav_menu_wrapper {
     margin: 8px auto 9px auto;
-    width: 1024px;
+    width: 1026px;
     padding: 0px;
 }
 
@@ -166,4 +167,12 @@ div.group_header_bg {
 #sns_link a {
     display: inline-block;
     padding-left: 22px;
+}
+
+#user_container_wrapper {
+    position: absolute;
+}
+
+.fancybox_fix_width {
+    max-width: 95%;
 }

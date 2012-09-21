@@ -122,8 +122,16 @@ function layoutWorkPanel() {
     //convert the more content link to a relief button.
     $(".more_content_button_wrapper").convertToButton();
     //Apply FancyBox to light box controls
+    //This version have bug, so, make sure have helpers property like this.
     $(".zoom_in_tool").fancybox({
-        "autoScale": true
+        "closeClick": true,
+        "helpers": {
+            "overlay": {
+                "css": {
+                    "overflow": "hidden"
+                }
+            }
+        }
     });
 
     var maxWords = 16;

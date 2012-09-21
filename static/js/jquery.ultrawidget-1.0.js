@@ -57,7 +57,7 @@
             "ready": false,
             "defaultLabel": null
         }, params || {});
-        params.width = params.width ? getInt(new String(params.width)) : this.width();
+        params.width = params.width ? getInt(params.width) : this.width();
         var holderHeight = this.height();
         //The div holder can't have a static position style.
         var cssPosition = this.css("position");
