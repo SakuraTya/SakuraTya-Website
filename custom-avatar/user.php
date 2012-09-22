@@ -14,7 +14,6 @@ function avatar_create_user_page(){
 	}
 	?>
 	<script type="text/javascript">
-	<!--
 	function ajaxFileUpload(){
 		jQuery.ajaxFileUpload
 		({
@@ -33,31 +32,33 @@ function avatar_create_user_page(){
 				}
 				aid=data.aid
 				jQuery("#alertText").html("上传成功:"+ data.url);
-				jQuery("<script type=\"text/javascript\" src=\"/wp-content/plugins/custom-avatar/js/jquery.Jcrop.min.js\"></script><link rel=\"stylesheet\" href=\"/wp-content/plugins/custom-avatar/js/jquery.Jcrop.min.css\" type=\"text/css\" media=\"all\" />").appendTo("head");
-				jQuery("#uploader").html("");
-				jQuery("<img id=\"cropbox\" src=\""+data.url+"\" /><button id=\"crop\">确认</button>").appendTo("#uploader");
-				jQuery("#cropbox").Jcrop({
-					aspectRatio:'1',
-					minSize: [100,100],
-					onSelect:function(c){
-						crop=c;
-					}
-				},function(){jcapi=this;});
-				jQuery("#crop").click(function(e){
-					e.preventDefault();
-					jQuery.ajax({
-						type:"POST",
-						url:"/wp-admin/admin-ajax.php?action=avatar_crop",
-						data:{x:crop.x,y:crop.y,h:crop.h,w:crop.w,x2:crop.x2,y2:crop.y2,aid:aid},
-						dataType:"json",
-						success:function(data){
-							if(data.status == 0){
-								jcapi.setImage(jQuery('#cropbox').attr('src'));
-								jcapi.release();
-								jcapi.disable();
-								jQuery('#uploader').remove('button');
-							}
+				jQuery.getScript("<?php echo plugins_url('',__FILE__);?>/js/jquery.Jcrop.min.js",function(){
+					jQuery("<link rel=\"stylesheet\" href=\"<?php echo plugins_url('',__FILE__);?>/js/jquery.Jcrop.min.css\" type=\"text/css\" media=\"all\" />").appendTo("head");
+					jQuery("#uploader").html("");
+					jQuery("<img id=\"cropbox\" src=\""+data.url+"\" /><button id=\"crop\">确认</button>").appendTo("#uploader");
+					jQuery("#cropbox").Jcrop({
+						aspectRatio:'1',
+						minSize: [100,100],
+						onSelect:function(c){
+							crop=c;
 						}
+					},function(){jcapi=this;});
+					jQuery("#crop").click(function(e){
+						e.preventDefault();
+						jQuery.ajax({
+							type:"POST",
+							url:"/wp-admin/admin-ajax.php?action=avatar_crop",
+							data:{x:crop.x,y:crop.y,h:crop.h,w:crop.w,x2:crop.x2,y2:crop.y2,aid:aid},
+							dataType:"json",
+							success:function(data){
+								if(data.status == 0){
+									jcapi.setImage(jQuery('#cropbox').attr('src')+"?c="+Math.random());
+									jcapi.release();
+									jcapi.disable();
+									jQuery('#crop').css('display','none');
+								}
+							}
+						});
 					});
 				});
 			},
@@ -68,9 +69,11 @@ function avatar_create_user_page(){
 		});
 		return false;
 	}
-	//-->
 	</script>
 	<div id="uploader">
+	<?php 
+		echo get_custom_avatar(true,"当前头像：<br>","<br>");
+	?>
 	<span id="alertText">请先上传头像，稍后可以进行裁剪。</span><br />
 	<form id="upload" enctype="multipart/form-data" method="POST">
 	<input id="avatarFile" type="file" name="avatarFile" />
