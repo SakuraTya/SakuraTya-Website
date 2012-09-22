@@ -4,6 +4,11 @@ function layoutWorkInfo () {
     $("#work_tags_list").convertToTags();
 }
 
+function layoutUserCPL () {
+    var userSignature= $("user_signature");
+    userSignature.getHeight();
+}
+
 $(document).ready(function(){
     layoutWorkInfo();
 });

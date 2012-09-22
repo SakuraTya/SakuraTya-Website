@@ -34,7 +34,13 @@
     var getInt = function (pxValue) {
         if(typeof(pxValue)=="string") {
             var pattern = /\d+/g;
-            return parseInt(pxValue.match(pattern)[0]);    
+            var matchResult = pxValue.match(pattern);
+            if(matchResult!=null && matchResult.length>0) {
+                return parseInt(matchResult[0]);
+            } else {
+                console.log("error: this value can't parse to integer");
+                return 0;
+            }
         } else if(typeof(pxValue)=="number") {
             return pxValue;
         } else {
@@ -325,7 +331,7 @@
             });;
             var shadow_layer = $("<div>").css({
                 "width": width + "px",
-                "height": height + "px",
+                "height": height + "px"
             });
             if(button_wrapper.hasClass("selected")) {
                 glow_layer.addClass("button_glow_layer_selected");
@@ -428,7 +434,7 @@
                 option =  $.extend({"text": page_num + 1, "class": "page_button_wrapper"}, option || {});
                 // console.log(option.text+"   "+option.class);
                 //this href attribute is useless when params.ajax is true. you should handle click event in your own callback.
-                var pageButton = $("<a>").addClass(option.class).attr("href", "#!/page/"+page_num+"/");
+                var pageButton = $("<a>").addClass(option["class"]).attr("href", "#!/page/"+page_num+"/");
                 pageButton.bind("click", getClickHandler(event, page_num));
                 var textWrapper = $("<span>").text(option.text);
                 pageButton.append(textWrapper);
@@ -445,7 +451,7 @@
                 if(params.prev_page_text) {
                     var option = {"text": params.prev_page_text};
                     if(current_page==0) {
-                        option.class = "page_button_wrapper disabled";
+                        option["class"] = "page_button_wrapper disabled";
                     }
                     addPageButton(current_page - 1, option);
                 }
@@ -483,7 +489,7 @@
                 if(params.next_page_text) {
                     var option = {"text": params.next_page_text};
                     if(current_page==totalPages-1) {
-                        option.class="page_button_wrapper disabled";
+                        option["class"]="page_button_wrapper disabled";
                     }
                     addPageButton(current_page + 1, option);
                 }

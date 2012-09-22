@@ -1,0 +1,89 @@
+<!DOCTYPE>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/detail.css">
+        <link rel="stylesheet" type="text/css" href="css/jquery.ultrawidget-1.0.css">
+        <link rel="stylesheet" type="text/css" href="fancybox/jquery.fancybox.css">
+        <script type="text/javascript" src="js/jquery-1.8.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery.lavalamp-1.4.min.js"></script>
+        <script type="text/javascript" src="js/jquery.ultrawidget-1.0.js"></script>
+        <script type="text/javascript" src="js/jquery.fancybox.pack.js"></script>
+        <script type="text/javascript" src="js/core.js"></script>
+        <script type="text/javascript" src="js/detail.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function() {
+                var global_StartItem = 1; //this javascript variable need to convert to php variable.
+                navMenuBuilding(global_StartItem);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="header_bar">
+            <div id="header_wrapper">
+                <div id="logo">
+                </div>
+                <div id="user_container_wrapper"></div>
+            </div>
+        </div>
+        <div id="nav_menu_wrapper">
+            <ul id="nav_menu">
+                <li><a href="/">首页</a></li>
+                <li><a href="/themes">系统主题</a></li>
+                <li><a href="/skins">软件皮肤</a></li>
+                <li><a href="/icons-and-cursors">图标&amp;光标</a></li>
+                <li><a href="/paintings">绘画作品</a></li>
+            </ul>
+            <div style="clear:both;display:block"></div>
+        </div>
+        <div class="main_content_wrapper">
+            <div id="cpl_header" class="group_header_bg">
+                <div id="cpl_user_name" class="title_wrapper">
+                    <div class="title_wrapper_left"></div>
+                    <div class="title_content"><span>星月战隼</span></div>
+                    <div class="title_wrapper_right"></div>
+                </div>
+            </div>
+            <div id="user_avatar">
+                <img src="img/avatar-big.jpg" />
+            </div>
+            <div id="user_signature_wrapper">
+                <div id="signature"><span>这个世界上没有奇迹，有的只是必然和偶然，还有谁做了什么……</span></div>
+                <div id="signature_label"></div>
+            </div>
+        </div>
+
+
+        <div id="footer_bar">
+            <div id="nav_links_area">
+                <ul id="about_us_list">
+                    <li class="list_title">关于我们</li>
+                    <li><a href="">关于樱茶</a></li>
+                    <li><a href="">关于樱茶幻萌组</a></li>
+                    <li><a href="">加入樱茶</a></li>
+                    <li><a href="">版权投诉</a></li>
+                </ul>
+                <ul id="user_help_list">
+                    <li class="list_title">使用帮助</li>
+                    <li><a href="">隐私政策</a></li>
+                    <li><a href="">发布作品指南</a></li>
+                    <li><a href="">站点地图</a></li>
+                    <li><a href="">社区守则</a></li>
+                </ul>
+                <ul id="blog_update">
+                    <li class="list_title">樱茶blog</li>
+                </ul>
+                <ul id="sns_link">
+                    <li class="list_title">关注樱茶</li>
+                    <li style="background:url('img/icon_twitter.png') no-repeat;line-height:18px;"><a href="">Twitter</a></li>
+                    <li style="background:url('img/icon_gplus.png') no-repeat;line-height:18px;"><a href="">Google+</a></li>
+                    <li style="background:url('img/icon_weibo.png') no-repeat;line-height:18px;"><a href="">新浪微博</a></li>
+                    <li style="background:url('img/icon_qweibo.png') no-repeat;line-height:18px;"><a href="">腾讯微博</a></li>
+                </ul>
+                <div style="clear:both;display:block;"></div>
+            </div>
+            <div id="copyright_info">© SakuraTya 2012 All Rights Received.</div>
+        </div>
+    </body>
+</html>

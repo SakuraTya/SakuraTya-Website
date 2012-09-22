@@ -62,6 +62,7 @@ div.drop_down_holder ul.drop_down {
     list-style-type: none;
     display: none;
     cursor: default;
+    z-index: 200;
 }
 
 div.dropDownPinImg {
