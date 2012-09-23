@@ -5,20 +5,31 @@ Description: 在不能使用gravatar的情况下，本插件可以替代gravatar
 Version: 1.0
 Author: Harry Cheng
 */
+
+/**
+ * Get the user's custom avatar.
+ * @param boolean $html Optional, default is false. Whether to return an img element.
+ * @return boolean|string The avatar's URL or an img element.Will be false if this user doesn't have avatar.
+ * @uses wp_get_attachment_image() wp_get_attachment_image_src()
+ */
 function get_custom_avatar($html=false,$before='',$after=''){
-	if (!get_user_meta(get_current_user_id(),'have_avatar',true)){
+	$aid=get_user_meta(get_current_user_id(),'avatar_id',true);
+	if ($aid==''){
+		return false;
+	}
+	if(!get_post($aid)){
 		return false;
 	}
 	if ($html==true){
-		$img=wp_get_attachment_image(get_user_meta(get_current_user_id(),'avatar_id',true),'full');
+		$img=wp_get_attachment_image($aid,'full');
 	}else{
-		$img=wp_get_attachment_image_src(get_user_meta(get_current_user_id(),'avatar_id',true),'full');
+		$img=wp_get_attachment_image_src($aid,'full');
 		$img=$img[0];
 	}
 	if ($img==''){
 		return false;
 	}
-	return $before.$img.$after;
+	return $img;
 }
 include("user.php");
 function avatar_upload(){
@@ -35,7 +46,7 @@ function avatar_upload(){
      		'post_status' => 'inherit',
 			'post_mime_type' => $file['type']
 			),$file['file']);
-	update_post_meta($attach,'is_cropped',1);
+	update_post_meta($attach,'is_cropped',false);
 	echo json_encode(array_merge($file,array('aid'=>$attach)));
 }
 function avatar_admin_head(){
@@ -49,9 +60,10 @@ function avatar_crop(){
 		echo json_encode(array('error'=>'图片裁剪失败','status'=>'1'));
 		return;
 	}
+	wp_delete_attachment(get_user_meta(get_current_user_id(),'avatar_id',true),true);
 	update_post_meta($_POST['aid'],'avatar_for',get_current_user_id());
 	update_post_meta($_POST['aid'],'is_cropped',0);
-	update_user_meta(get_current_user_id(), 'have_avatar', 0);
+	update_user_meta(get_current_user_id(), 'have_avatar', true);
 	update_user_meta(get_current_user_id(), 'avatar_id', $_POST['aid']);
 	echo json_encode(array('status'=>'0'));
 }
@@ -61,7 +73,7 @@ function avatar_add_menu(){
 function avatar_del($id){
 	$uid=get_post_meta($id,'avatar_for');
 	if(is_numeric($uid)){
-		update_user_meta($uid,'have_avatar',1);
+		update_user_meta($uid,'have_avatar',false);
 		delete_post_meta($uid, 'avatar_id');
 	}
 }
