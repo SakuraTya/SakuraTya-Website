@@ -4,7 +4,7 @@ function navMenuBuilding(currentItem) {
         "click": function(){
 
         },
-        "starItem" : currentItem,
+        "startItem" : currentItem,
         "returnStart": function(homeElement) {
             $("#nav_menu").children().each(function() {
                 if(!$(this).hasClass("selectedLava")){

@@ -6,7 +6,7 @@ function layoutWorkInfo () {
 
 function layoutUserCPL () {
     var userSignature= $("user_signature");
-    userSignature.getHeight();
+    $("user_signature_wrapper").userSignature.Height();
 }
 
 $(document).ready(function(){
