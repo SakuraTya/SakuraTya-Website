@@ -3,13 +3,14 @@
 <script type="text/javascript" src="<?php echo $dir;?>js/detail.js"></script>
 <script type="text/javascript">
             $(document).ready(function() {
-                var global_StartItem = 2; //this javascript variable need to convert to php variable.
+                var global_StartItem = 1; //this javascript variable need to convert to php variable.
                 navMenuBuilding(global_StartItem);
             });
 </script>
 <body>
 <?php nav_menu();
-global $post;?>
+global $post;
+$cats=get_the_category();?>
 <div class="main_content_wrapper">
 <div id="detail_header" class="group_header_bg">
 <div id="detail_title" class="title_wrapper">
@@ -18,8 +19,20 @@ global $post;?>
 <div class="title_wrapper_right"></div>
 </div>
 <!-- this link should be modifed according to the article's category and sub category -->
-                <div id="detail_category" class="detail_properties_link"><a href="">系统主题</a></div>
-                <div id="detail_subcategory" class="detail_properties_link"><a href="">Windows 7</a></div>
+                <div id="detail_category" class="detail_properties_link">
+                <?php foreach ($cats as $cat){
+                	if ($cat->category_parent!=0)continue;
+                ?>
+                <a href="<?php echo get_category_link($cat);?>"><?php echo $cat->name;?></a>
+                <?php }?>
+                </div>
+                <div id="detail_subcategory" class="detail_properties_link">
+                <?php foreach ($cats as $cat){
+                	if ($cat->category_parent==0)continue;
+                ?>
+                <a href="<?php echo get_category_link($cat);?>"><?php echo $cat->name;?></a>
+                <?php }?>
+                </div>
             </div>
             <div id="work_content_wrapper">
             <?php echo $post->post_content;?>
@@ -28,20 +41,20 @@ global $post;?>
                 <?php author_info(the_post()->post_author);?>
                     <div id="project_info">
                     <div id="project_brief">
-                    <span>发表于：2011年9月28日</span>
-                    <span>查看：4480</span>
-                    <span>评论：160</span>
+                    <span>发表于：<?php echo strftime('%Y年%m月%d日',strtotime($post->post_modified));?></span>
+                    <span>查看：<?php echo get_post_views($post->ID);?></span>
+                    <span>评论：<?php echo $post->comment_count;?></span>
                     </div>
                     <!-- This button need ajax load the real download link -->
                     <div id="project_download_button">
                     <div id="download_icon"></div>
                     <span class="button_title">查看下载地址</span>
-                    <span class="button_desc">已下载3801次</span>
+                    <span class="button_desc">已下载<?php echo get_downloads($post->ID);?>次</span>
                     </div>
                     <div id="project_favorite_button">
                     <div id="favorite_icon"></div>
                     <span class="button_title">收藏这个作品</span>
-                    <span class="button_desc">收藏次数1080次</span>
+                    <span class="button_desc">收藏次数<?php echo get_favorites($post->ID);?>次</span>
                     </div>
                     <div class="info_section_label">
                     <div id="info_label_project"></div>
@@ -69,6 +82,6 @@ global $post;?>
                     </div>
                     <div style="display:block;clear:both;"></div>
                     </div>
-                    <?php get_footer();?>
+                    <?php set_post_views($post->ID);get_footer();?>
     </body>
     </html>

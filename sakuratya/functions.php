@@ -71,7 +71,6 @@ function nav_menu(){
 	</div>
 			<?php
 }
-//@todo 须在单独文章显示页面放入set_post_views函数，统计浏览数
 function set_post_views($postID) {
 	$count_key = 'post_views_count';
 	$count = get_post_meta($postID, $count_key, true);
