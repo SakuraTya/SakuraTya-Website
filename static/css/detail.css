@@ -418,3 +418,32 @@ a.facebook {
 a.foursquare {
     background-image: url("../img/foursquare.png");
 }
+
+#user_works {
+    width: 100%;
+    margin: 0px;
+    padding: 44px 0px 0px 0px;
+    border-top: 1px solid #d9d9d9;
+    position: relative;
+}
+
+#user_works:before {
+    width: 100%;
+    height: 1px;
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #ffffff
+}
+
+#user_works:after {
+    width: 100px;
+    height: 29px;
+    background: url("../img/spirite.png") no-repeat;
+    background-position: 0px -156px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    content: "";
+}
