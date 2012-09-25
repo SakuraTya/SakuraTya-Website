@@ -1,4 +1,4 @@
-
+window.onload=function(){
 jQuery.extend({
 	
 
@@ -198,4 +198,4 @@ jQuery.extend({
         return data;
     }
 })
-
+};

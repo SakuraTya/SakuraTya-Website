@@ -1,0 +1,239 @@
+/**
+ * This styles sheet is used for jDropDownControls jQuery Plugin
+ * You can override these styles by your own.
+ * version 1.0
+ * Date: July 17th, 2012
+ */
+
+/*
+ * drop down menu default styles
+ */
+div.drop_down_holder {
+    position: relative;
+    z-index: 3;
+    cursor: default;
+}
+
+div.drop_down_wrapper {
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+div.drop_down_wrapper.focused {
+    background: #f6f6f6;
+}
+
+div.drop_down_wrapper.pressed {
+    border-bottom: 1px solid #ffffff;
+    background: -moz-linear-gradient(top,  #f4f4f4 0%, #ffffff 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f4f4f4), color-stop(100%,#ffffff)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f4f4f4 0%,#ffffff 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f4f4f4 0%,#ffffff 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f4f4f4 0%,#ffffff 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f4f4f4 0%,#ffffff 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f4f4f4', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+}
+
+
+div.drop_down_holder span {
+    display: block;
+    float: left;
+    color: #989898;
+    font-size: 0.9em;
+    font-family: Arial,"微软雅黑","幼圆", sans-serif;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+div.drop_down_holder ul.drop_down {
+    position: absolute;
+    background: #ffffff;
+    border-bottom: 1px solid #dfdfdf;
+    border-left: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+    border-top: 1px solid #ffffff;
+    margin: 0;
+    padding: 6px 3px 5px 3px;
+    left: -1px;
+    -moz-box-shadow:    1px 1px 3px 0px #ccc;
+    -webkit-box-shadow: 1px 1px 3px 0px #ccc;
+    box-shadow:         1px 1px 3px 0px #ccc;
+    list-style-type: none;
+    display: none;
+    cursor: default;
+}
+
+div.dropDownPinImg {
+    width: 11px;
+    height: 8px;
+    float: right;
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -292px -8px;
+    margin: 12px 8px auto 0px;
+    position: relative;
+    z-index: 10;
+}
+
+ul.drop_down li {
+    cursor: pointer;
+    padding: 5px;
+    color: #989898;
+    font-size: 0.8em;
+    display: block;
+}
+
+ul.drop_down li.selected {
+    color: #ab628b;
+}
+
+ul.drop_down li.focused {
+    background: #989898;
+    color: #ffffff;
+}
+
+/**
+ * Use to show tags
+ **/
+.tag_frame {
+    display: block;
+    float: left;
+    height: 18px;
+    margin: 4px 4px 4px 5px;
+    cursor: pointer;
+}
+
+.tag_frame div.left_frame {
+    padding: 2px 7px 2px 5px;
+    display: block;
+    float: left;
+    background: #ffffff;
+    border-top: 1px solid #cfcfcf;
+    border-left: 1px solid #cfcfcf;
+    border-bottom: 1px solid #cfcfcf;
+    color: #a6a6a6;
+    font-size: 12px;
+    line-height: 12px;
+}
+
+.tag_frame.focused div.left_frame {
+    background: #cfcfcf;
+    color: #ffffff;
+}
+
+.tag_frame div.right_frame {
+    width: 9px;
+    height: 18px;
+    display: block;
+    float: left;
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -300px -77px;
+}
+
+.tag_frame.focused div.right_frame {
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -300px -96px;
+}
+
+/**
+ * Button styles
+ */
+div.button_glow_layer {
+    border: 1px solid #ffffff;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    background: #f6f6f6; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f6f6f6 0%, #eaeaea 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f6f6f6 0%,#eaeaea 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
+}
+
+div.button_shadow_layer {
+    border: 1px solid #d9d9d9;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+}
+
+div.button_glow_layer.focused {
+    background: #f1f1f1; /* Old browsers */
+    background: -moz-linear-gradient(top,  #f9f9f9 0%, #f1f1f1 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f9f9f9), color-stop(100%,#f1f1f1)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f9f9f9 0%,#f1f1f1 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f9f9f9 0%,#f1f1f1 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f9f9f9 0%,#f1f1f1 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f9f9f9 0%,#f1f1f1 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f9f9f9', endColorstr='#f1f1f1',GradientType=0 ); /* IE6-9 */
+}
+
+div.button_shadow_layer.pressed {
+    background: #dbdbdb;
+    border: 1px solid #cccccc;
+}
+
+div.button_shadow_layer_disabled {
+    border: 1px solid #dcdcdc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+}
+div.button_glow_layer_disabled {
+    border: 1px solid #f7f7f7;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #eeeeee;
+}
+div.button_shadow_layer_selected {
+    border: 1px solid #cccccc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-color: #dbdbdb;
+}
+
+div.button_glow_layer_selected {
+    border: 1px solid#ffffff;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+
+.page_button_wrapper {
+    display: block;
+    float: left;
+    position: relative;
+    margin-right: 8px;
+}
+
+.page_button_wrapper.disabled, .page_button_wrapper.selected {
+    cursor: default;
+}
+
+.page_button_wrapper.disabled span {
+    color: #d1d1d1 !important;
+}
+.page_button_wrapper span {
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.page_ellipsis_wrapper {
+    display: block;
+    float: left;
+    margin-right: 8px;
+    margin-left: 3px;
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
+}
