@@ -108,7 +108,6 @@ function layoutUserCPL () {
 
 function page_handle (page_num, paginator) {
     //console.log(paginator);
-	console.log(page_num);
     paginator.goToPage(page_num);
     paginator.children(".page_button_wrapper").convertToButton();
     var paginator_width = 0;
@@ -143,7 +142,7 @@ function page_ajax_update(page_num,paginator) {
 	*/
 	lockPanel();
 	$.ajax({
-		"url":"/api/get_postsd.php",
+		"url":"/api/get_posts.php",
 		"dataType":"json",
 		"data":{"mode":"user","id":Request("author"),"page":page_num},
 		"success":function(data){
