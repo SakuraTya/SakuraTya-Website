@@ -1,6 +1,12 @@
-<?php get_header();?>
-<link rel="stylesheet" type="text/css" href="<?php echo get_stylesheet_directory_uri()."/";?>css/index.css" />
-</head>
+<?php get_header();$dir = get_stylesheet_directory_uri()."/";?>
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/index.css" />
+<script type="text/javascript" src="<?php echo $dir;?>js/index.js"></script>
+<script type="text/javascript">
+            $(document).ready(function() {
+                var global_StartItem = 1; //this javascript variable need to convert to php variable.
+                navMenuBuilding(global_StartItem);
+            });
+</script>
 <body>
 <?php nav_menu();?>
         <div id="popular_works_show">

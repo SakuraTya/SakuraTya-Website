@@ -144,13 +144,13 @@ div.button_glow_layer {
     left: 0px;
     top: 0px;
     background: #f6f6f6; /* Old browsers */
-    background: -moz-linear-gradient(top,  #f6f6f6 0%, #ebebeb 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#ebebeb)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  #f6f6f6 0%,#ebebeb 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  #f6f6f6 0%,#ebebeb 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  #f6f6f6 0%,#ebebeb 100%); /* IE10+ */
-    background: linear-gradient(to bottom,  #f6f6f6 0%,#ebebeb 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#ebebeb',GradientType=0 ); /* IE6-9 */
+    background: -moz-linear-gradient(top,  #f6f6f6 0%, #eaeaea 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f6f6f6), color-stop(100%,#eaeaea)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f6f6f6 0%,#eaeaea 100%); /* IE10+ */
+    background: linear-gradient(to bottom,  #f6f6f6 0%,#eaeaea 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f6f6f6', endColorstr='#eaeaea',GradientType=0 ); /* IE6-9 */
 }
 
 div.button_shadow_layer {
@@ -174,4 +174,66 @@ div.button_glow_layer.focused {
 div.button_shadow_layer.pressed {
     background: #dbdbdb;
     border: 1px solid #cccccc;
+}
+
+div.button_shadow_layer_disabled {
+    border: 1px solid #dcdcdc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+}
+div.button_glow_layer_disabled {
+    border: 1px solid #f7f7f7;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #eeeeee;
+}
+div.button_shadow_layer_selected {
+    border: 1px solid #cccccc;
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-color: #dbdbdb;
+}
+
+div.button_glow_layer_selected {
+    border: 1px solid#ffffff;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+}
+
+
+.page_button_wrapper {
+    display: block;
+    float: left;
+    position: relative;
+    margin-right: 8px;
+}
+
+.page_button_wrapper.disabled, .page_button_wrapper.selected {
+    cursor: default;
+}
+
+.page_button_wrapper.disabled span {
+    color: #d1d1d1 !important;
+}
+.page_button_wrapper span {
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+.page_ellipsis_wrapper {
+    display: block;
+    float: left;
+    margin-right: 8px;
+    margin-left: 3px;
+    line-height: 25px;
+    font-size: 0.9em;
+    color: #a6a6a6;
+    padding-left: 5px;
+    padding-right: 5px;
 }

@@ -1,24 +1,30 @@
 <?php
 define('FAV_NAME', $table_prefix . "favorites");
-function nav_menu(){
+add_action('profile_personal_options','add_sign_option');
+add_action('profile_update', 'update_sign');
+function update_sign($uid){
+	if(!isset($_POST['sign'])){
+		return;
+	}
+	$sign=$_POST['sign'];
+	$sign=strip_tags($sign);
+	update_user_meta($uid, 'sign', $sign);
+}
+function get_sign($uid){
+	return get_user_meta($uid,'sign',true);
+}
+function add_sign_option($profileuser){
 	?>
-		<div id="header_bar">
-		<div id="header_wrapper">
-			<div id="logo"></div>
-			<div id="user_container_wrapper"></div>
-		</div>
-	</div>
-	<div id="nav_menu_wrapper">
-		<ul id="nav_menu">
-			<li><a href="/">首页</a></li>
-			<li><a href="/themes">系统主题</a></li>
-			<li><a href="/skins">软件皮肤</a></li>
-			<li><a href="/icons-and-cursors">图标&amp;光标</a></li>
-			<li><a href="/paintings">绘画作品</a></li>
-		</ul>
-		<div style="clear:both;display:block"></div>
-	</div>
-	<?
+	<table class="form-table">
+		<tr>
+			<th scope="row">签名</th>
+			<td>
+				<input type="text" name="sign" id="sign" class="regular-text" value="<?php echo get_user_meta($profileuser->ID,'sign',true);?>" />
+				<span class="description">将会被显示在您发布的文章和您的用户主页中。</span>
+			</td>
+		</tr>
+	</table>
+	<?php 
 }
 function rank_score_calc($post, $dc, $vc, $g){
 	date_default_timezone_set('Asia/Shanghai');
@@ -29,7 +35,42 @@ function rank_score_calc($post, $dc, $vc, $g){
 	$score = (0.5*$dc + 0.3*$cc + 0.2*$vc)/(pow($span+2,$g));
 	return $score;
 }
-//@todo 须在单独文章显示页面放入set_post_views函数，统计浏览数
+function author_info($id){
+	global $dir;
+	?>
+	<div id="author_info">
+	<!-- The href property of #author_avatar_wrapper and #author_name is both the author profile page's url -->
+	<a id="author_avatar_wrapper" href="<?php echo get_author_posts_url($id);?>"><img src="<?php echo get_custom_avatar();?>" /></a>
+	<a id="author_name" href="<?php echo get_author_posts_url($id);?>"><?php echo get_author_name($id);?></a>
+	<div id="author_sign"><?php echo get_sign(get_current_user_id());?></div>
+	<div id="author_function_wrapper"></div>
+	<div class="info_section_label">
+	<div id="info_label_author"></div>
+	<div class="info_section_divider"></div>
+	</div>
+	</div>
+	<?php	
+}
+function nav_menu(){
+	?>
+	<div id="header_bar">
+		<div id="header_wrapper">
+			<div id="logo"></div>
+			<div id="user_container_wrapper"></div>
+		</div>
+	</div>
+	<div id="nav_menu_wrapper">
+		<ul id="nav_menu">
+				<li><a href="/">首页</a></li>
+				<li><a href="/themes">系统主题</a></li>
+				<li><a href="/skins">软件皮肤</a></li>
+				<li><a href="/icons-and-cursors">图标&amp;光标</a></li>
+				<li><a href="/paintings">绘画作品</a></li>
+		</ul>
+		<div style="clear:both;display:block"></div>
+	</div>
+			<?php
+}
 function set_post_views($postID) {
 	$count_key = 'post_views_count';
 	$count = get_post_meta($postID, $count_key, true);
