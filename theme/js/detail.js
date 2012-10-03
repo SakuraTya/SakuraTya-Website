@@ -107,7 +107,8 @@ function layoutUserCPL () {
 }
 
 function page_handle (page_num, paginator) {
-    // console.log(paginator);
+    //console.log(paginator);
+	console.log(page_num);
     paginator.goToPage(page_num);
     paginator.children(".page_button_wrapper").convertToButton();
     var paginator_width = 0;
@@ -125,11 +126,13 @@ function page_handle (page_num, paginator) {
     // console.log(paginator_width);
     paginator.css({"width":  paginator_width+"px", "margin-left": "auto", "margin-right": "auto"});
 }
-
+function lockPanel(){
+	
+}
 function page_ajax_update(page_num,paginator) {
 	page_num+=1;
 	//Lock the <div>element here.
-	$("<div>")
+	/*$("<div>")
 	.css({"mirgin-left":"auto","mirgin-right":"auto","width":"100px"})
 	.addClass("loadingGif")
 	.append(
@@ -137,8 +140,10 @@ function page_ajax_update(page_num,paginator) {
 			)
 	.prependTo($("#user_works"));
 	$("#user_works .works_panel").css("display","none");
+	*/
+	lockPanel();
 	$.ajax({
-		"url":"/api/get_posts.php",
+		"url":"/api/get_postsd.php",
 		"dataType":"json",
 		"data":{"mode":"user","id":Request("author"),"page":page_num},
 		"success":function(data){
@@ -191,8 +196,8 @@ function page_ajax_update(page_num,paginator) {
 		    var workTitleWidth = $(".work_title").width();
 		    
 		    $(".work_title a").ellipsis({"width":workTitleWidth, "useContainerPadding": true, "useContainerMargin": false});
-			page_handle(page_num,paginator);
-			$(".loadingGif").remove();
+			page_handle(page_num-1,paginator);
+			//$(".loadingGif").remove();
 		},
 		"error":function(xhr,text){
 			console.log(text);
