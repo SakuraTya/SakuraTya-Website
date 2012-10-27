@@ -1,2 +1,15 @@
 This is a WordPress Plugin project.
 Thanks:Advanced Custom Fields
+
+部署方法
+==================
+api=>document_root/api
+custom-avatar=>document_root/wp-content/plugins/custom-avatar
+sakuratya=>document_root/wp-content/plugins/sakuratya
+theme=>document_root/wp-content/themes/sakuratya
+MySQL运行：
+CREATE TABLE `wp_favorites` (
+  `user_id` bigint(20) unsigned NOT NULL,
+  `post_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`user_id`,`post_id`)
+);
