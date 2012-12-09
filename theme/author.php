@@ -1,4 +1,11 @@
-<?php get_header();$dir = get_stylesheet_directory_uri()."/";?>
+<?php get_header();$dir = get_stylesheet_directory_uri()."/";
+$curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : get_userdata(intval($author));
+$page=isset($_GET['page'])?$_GET['page']:0;
+$page=is_int($page)?$page:0;
+$page=$_GET['page'];
+$query = new WP_Query(array('author'=>$curauth->ID,'posts_per_page'=>4,'paged'=>$page));
+echo '<!--';print_r($curauth);echo '-->';
+?>
 <link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/detail.css" />
 <link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/index.css" />
 <script type="text/javascript" src="<?php echo $dir;?>js/detail.js"></script>
@@ -6,13 +13,10 @@
             $(document).ready(function() {
                 var global_StartItem = 0; //this javascript variable need to convert to php variable.
                 navMenuBuilding(global_StartItem);
+                layoutWorkPanel(<?php echo count_user_posts($curauth->ID)?>,4);
             });
 </script>
-<body><?php nav_menu(); $curauth = (isset($_GET['author_name'])) ? get_user_by('slug', $author_name) : get_userdata(intval($author));
-$page=isset($_GET['page'])?$_GET['page']:0;
-$page=is_int($page)?$page:0;
-$page=$_GET['page'];
-$query = new WP_Query(array('author'=>$curauth->ID,'posts_per_page'=>4,'paged'=>$page))?>
+<body><?php nav_menu(); ?>
         <div class="main_content_wrapper">
             <div id="cpl_header" class="group_header_bg">
                 <div id="cpl_user_name" class="title_wrapper">
@@ -22,7 +26,7 @@ $query = new WP_Query(array('author'=>$curauth->ID,'posts_per_page'=>4,'paged'=>
                 </div>
             </div>
             <div id="user_avatar">
-                <img src="<?php echo get_custom_avatar();?>" />
+                <img src="<?php echo get_custom_avatar($curauth->ID);?>" />
             </div>
             <div id="user_info">
                 <div id="simple_user_info">

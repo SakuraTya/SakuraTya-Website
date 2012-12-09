@@ -129,6 +129,7 @@ function lockPanel(){
 	
 }
 function page_ajax_update(page_num,paginator) {
+	console.log('click');
 	page_num+=1;
 	//Lock the <div>element here.
 	/*$("<div>")
@@ -140,16 +141,33 @@ function page_ajax_update(page_num,paginator) {
 	.prependTo($("#user_works"));
 	$("#user_works .works_panel").css("display","none");
 	*/
-	lockPanel();
+	if($('#data_type').length==0){
+		var dat={"mode":"user","id":Request("author"),"page":page_num};
+		console.log('a');
+	}else{
+		if(Request('cat')!=""){
+			console.log('b1');
+			var dat={"mode":"hot","type":"cat","slug":Request('cat'),"page":page_num};
+		}else{
+			if($('#data_type').text()=='all'){
+				var dat={"mode":"hot","type":"all","page":page_num};
+			}else{
+				console.log('b2');
+				var dat={"mode":"hot","type":"tag","slug":Request('tag'),"page":page_num};
+			}
+		}
+	}
+	console.log('req');
 	$.ajax({
 		"url":"/api/get_posts.php",
 		"dataType":"json",
-		"data":{"mode":"user","id":Request("author"),"page":page_num},
+		"data":dat,
 		"success":function(data){
 			j=0;
 			if (typeof data.msg !='undefined'){
 				//error
 			}
+			$(".works_panel").remove();
 			$("#user_works .works_panel").remove();
 			$.each(data,function(i,val){
 				workPanel(val).prependTo($("#user_works")).find(".work_tags").convertToTags({

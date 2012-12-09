@@ -52,7 +52,13 @@
             <!--This is works panel area where all panels place here, a template should modify to a loop structure-->
             <div class="works_panel_wrapper">
             <?php
-			$d=10;$p = get_post($d);work_block($p);work_block($p);work_block($p);work_block($p);work_block($p);work_block($p);work_block($p);work_block($p);
+			$pop=$wpdb->get_results('SELECT * FROM wp_score ORDER BY score DESC',ARRAY_N);
+			$i=0;
+			foreach ($pop as $po){
+				work_block(get_post($po[0]));
+				$i++;
+				if ($i==8)break;
+			}
             ?>
             <div style="clear:both;display:block;"></div>
             </div>

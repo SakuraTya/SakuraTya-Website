@@ -1,0 +1,8 @@
+RewriteEngine on
+RewriteCond %{REQUEST_FILENAME} -f [NC,OR] 
+RewriteCond %{REQUEST_FILENAME} -d [NC] 
+RewriteRule .* - [L]
+RewriteRule ^([-A-z0-9]+)\?(.*)$ api.php?a=1&api=$1&$2
+RewriteRule ^([-A-z0-9]+)/([-A-z0-9]+)\?(.+)$ api.php?a=2&api=$1&data=$2&$3 [L]
+RewriteRule ^([-A-z0-9]+)$ api.php?a=3&api=$1 [L]
+RewriteRule ^([-A-z0-9]+)/([-A-z0-9]+)$ api.php?a=4&api=$1&data=$2 [L]
