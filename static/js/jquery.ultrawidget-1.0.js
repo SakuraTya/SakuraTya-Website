@@ -621,6 +621,9 @@
                 "getView": function(position) {
                     return null;
                 }
+            },
+            "setAdapter": function(listAdapter) {
+                $.extend(this.adapter, listAdapter || {});
             }
         });
 
@@ -648,5 +651,6 @@
         var removeViewInLayout = function(view) {
             // body...
         }
+
     }
  })(jQuery);
