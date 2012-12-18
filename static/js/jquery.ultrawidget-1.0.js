@@ -571,4 +571,82 @@
             }                    
         });
     }
+
+    /**
+     * Create a grid view with vertical scrolling. This grid view has animation effect when create and remove a child.
+     * You should implement an adapter and use setAdapterMethod to create a grid view.
+     *
+     */
+    $.fn.gridList = function(params) {
+        params = $.extend({
+            "stretchMode": false,
+            "numColumn": 4,
+            "columnWidth": "250px",
+            "verticalSpacing": "6px"
+        }, params || {});
+
+        $.extend(this, {
+            /**
+             * Add a view before or after specific position.
+             * @param position, an integer value, define where should be insert to.
+             * @param before, an boolean value, define if should insert before the position or after it.
+             */
+            "addView":function(position, before) {
+                if (adapter) {
+                    var child = adapter.getView(position);
+                    if(child) {
+                        addViewInLayout(position, before, child);
+                    }
+                };
+            },
+            /**
+             * Remove a view in specific position.
+             * position, an integer value, define which view of position should be removed.
+             */
+            "removeView":function(position) {
+
+            },
+            "recycleBin": new Array(),
+            "adapter": {
+                "list": null,
+                "getCount": function() {
+                    return list.length;
+                },
+                "getItem":function(position) {
+                    return list[position];
+                },
+                "getItemId": function(position) {
+                    return 0;
+                },
+                "getView": function(position) {
+                    return null;
+                }
+            }
+        });
+
+        var addViewInLayout = function(position, before, view) {
+            var children = this.children();
+            var referenceView = children.eq(position);
+            if(before) {
+                if(referenceView) {
+                    referenceView.before(view);
+                } else {
+                    // If referenceView is undefined. we just insert the view to the first position
+                    referenceView = children.first();
+                    referenceView.before(view);
+                }
+            } else {
+                if(referenceView) {
+                    referenceView.after(view);
+                } else {
+                    // If referenceView is undefined. we just insert the view to the last position.
+                    referenceView = children.last();
+                    referenceView.after(view);
+                }
+            }
+        }
+        var removeViewInLayout = function(view) {
+            // body...
+        }
+    }
  })(jQuery);
