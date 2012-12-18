@@ -16,6 +16,9 @@
             $(document).ready(function() {
                 var global_StartItem = 1; //this javascript variable need to convert to php variable.
                 navMenuBuilding(global_StartItem);
+                var gridList = $("#header_bar").gridList();
+                gridList.setAdapter("adapter");
+
             });
         </script>
     </head>

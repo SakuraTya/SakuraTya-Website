@@ -36,3 +36,70 @@ function navMenuBuilding(currentItem) {
         }
     })
 }
+
+(function($, undefined) {
+
+    $.fn.listAdapter = function(list) {
+        $.extend(this, {
+            "list": new Array(),
+            "getCount": function() {
+                return list.length;
+            },
+            "getItem":function(position) {
+                return list[position];
+            },
+            "getItemId": function(position) {
+                return 0;
+            },
+            "getView": function(position) {
+                return null;
+            }
+        });
+        this.list = list;
+    }
+
+    $.fn.gridList = function(params) {
+        params = $.extend({
+            "stretchMode": false,
+            "numColumn": 4,
+            "columnWidth": "250px",
+            "verticalSpacing": "6px"
+        }, params || {});
+
+        $.extend(this, {
+            /**
+             * Add a view before or after specific position.
+             * @param position, an integer value, define where should be insert to.
+             * @param before, an boolean value, define if should insert before the position or after it.
+             */
+            "addView":function(position, before) {
+                if (adapter && adapter.length > 0) {
+                    var child = adapter.getView(position);
+                    if(child) {
+                        addViewInLayout(position, before, child);
+                    }
+                };
+            },
+            /**
+             * Remove a view in specific position.
+             * position, an integer value, define which view of position should be removed.
+             */
+            "removeView":function(position) {
+
+            },
+            "adapter": null,
+            "recycleBin": new Array();
+        });
+
+        var addViewInLayout = function(position, before, view) {
+            if(before) {
+                
+            } else {
+
+            }
+        }
+        var removeViewInLayout = function(view) {
+            // body...
+        }
+    }
+})(jQuery);
