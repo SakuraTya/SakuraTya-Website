@@ -582,7 +582,8 @@
             "stretchMode": false,
             "numColumn": 4,
             "columnWidth": "250px",
-            "verticalSpacing": "6px"
+            "verticalSpacing": "23px",
+            "horizontalSpacing": "6px"
         }, params || {});
 
         $.extend(this, {
@@ -603,7 +604,7 @@
              * Remove a view in specific position.
              * position, an integer value, define which view of position should be removed.
              */
-            "removeView":function(position) {
+            "removeView": function(position) {
 
             },
             "recycleBin": new Array(),
@@ -612,7 +613,7 @@
                 "getCount": function() {
                     return list.length;
                 },
-                "getItem":function(position) {
+                "getItem": function(position) {
                     return list[position];
                 },
                 "getItemId": function(position) {
@@ -633,23 +634,52 @@
             if(before) {
                 if(referenceView) {
                     referenceView.before(view);
+                    layout(position, children.length - 1);
                 } else {
                     // If referenceView is undefined. we just insert the view to the first position
                     referenceView = children.first();
                     referenceView.before(view);
+                    layout(0, children.length - 1);
                 }
             } else {
                 if(referenceView) {
                     referenceView.after(view);
+                    layout(position + 1, children.length - 1);
                 } else {
                     // If referenceView is undefined. we just insert the view to the last position.
                     referenceView = children.last();
                     referenceView.after(view);
+                    layout(children.length - 1, children.length - 1);
                 }
             }
         }
         var removeViewInLayout = function(view) {
-            // body...
+            var scrap = view.detach();
+            this.recycleBin.push(scrap);
+            
+        }
+        var layout = function(startPosition, endPosition) {
+            var children = this.children();
+            var maxRow = (this.adapter.getCount - 1) / numColumn;
+            for(var pos = startPosition; i<=endPosition; i++) {
+                var row = pos / numColumn;
+                var marginRight = params.horizontalSpacing;
+                var marginBottom = params.verticalSpacing;
+                if(row == maxRow) {
+                    marginBottom = "0px";
+                }
+                var rowDelta = pos % numColumn;
+                if(rowDelta == numColumn - 1) {
+                    marginRight = "0px";
+                }
+                var child = children.eq(pos);
+                child.css({
+                    "margin-top": "0px",
+                    "margin-right": marginRight,
+                    "margin-bottom": marginBottom,
+                    "margin-left": "0px"
+                });
+            }
         }
 
     }
