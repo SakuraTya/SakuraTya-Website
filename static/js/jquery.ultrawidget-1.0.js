@@ -605,7 +605,20 @@
              * position, an integer value, define which view of position should be removed.
              */
             "removeView": function(position) {
-
+                var children = this.children();
+                var victim = children.eq(position);
+                if(victim){
+                    victim.remove();
+                }
+            },
+            "detachAllViews": function() {
+                var detachedChildren = this.children().detach();
+                recycleBin = detachedChildren;
+            },
+            "attachDetachedViews": function() {
+                if(this.recycleBin) {
+                    this.recycleBin.appendTo(this);
+                }
             },
             "recycleBin": new Array(),
             "adapter": {
@@ -652,11 +665,6 @@
                     layout(children.length - 1, children.length - 1);
                 }
             }
-        }
-        var removeViewInLayout = function(view) {
-            var scrap = view.detach();
-            this.recycleBin.push(scrap);
-            
         }
         var layout = function(startPosition, endPosition) {
             var children = this.children();
