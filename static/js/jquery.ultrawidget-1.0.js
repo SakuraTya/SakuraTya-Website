@@ -593,12 +593,12 @@
              * @param before, an boolean value, define if should insert before the position or after it.
              */
             "addView":function(position, before) {
-                if (adapter) {
-                    var child = adapter.getView(position);
+                if (this.adapter) {
+                    var child = this.adapter.getView(position);
                     if(child) {
                         addViewInLayout(position, before, child);
                     }
-                };
+                }
             },
             /**
              * Remove a view in specific position.
@@ -609,6 +609,7 @@
                 var victim = children.eq(position);
                 if(victim){
                     victim.remove();
+                    layout(position, children.length);
                 }
             },
             "detachAllViews": function() {
@@ -638,6 +639,9 @@
             },
             "setAdapter": function(listAdapter) {
                 $.extend(this.adapter, listAdapter || {});
+                if(this.adapter) {
+
+                }
             }
         });
 
@@ -689,6 +693,6 @@
                 });
             }
         }
-
+        return this;
     }
  })(jQuery);
