@@ -1,5 +1,5 @@
 <?php
-include('./api-config.php');
+include('../wp-config.php');
 header('Content-Type: text/plain; charset=utf-8');
 function filter_where_week( $where = '' ) {
 	$where .= " AND post_date > '" . date('Y-m-d', strtotime('-7 days')) . "'";
@@ -160,7 +160,60 @@ switch ($_GET['mode']){
 			default:die(json_encode(array('msg'=>'Invalid time span.')));
 		}
 		break;
-		default:die(json_encode(array('msg'=>'Invalid argument.')));
+	case 'user':
+		if(!isset($_GET['id'])){
+			die(json_encode(array('msg'=>'You should give this page the user\'s ID(integer) by GET method.')));
+		}
+		$id=$_GET['id'];
+		$page=isset($_GET['page'])?$_GET['page']:1;
+		$query=new WP_Query('author='.$id.'&posts_per_page=4&paged='.$page);
+		if($query){
+			foreach ($query->posts as $post){
+				$return[]=post_json($post);
+			}
+		}
+		echo json_encode($return);
+		break;
+	case 'hot':
+		$obj_per_page=4;
+		if(!isset($_GET['type'])){
+			die(json_encode(array('msg'=>'You should give this page the query type by GET method.')));
+		}
+		$page=isset($_GET['page'])?$_GET['page']:1;
+		switch ($_GET['type']){
+			case 'all':
+				$pop=$wpdb->get_results('SELECT * FROM wp_score ORDER BY score DESC LIMIT '.(($page-1)*$obj_per_page).','.$obj_per_page,ARRAY_A);
+				if(count($pop)==0){
+					die(json_encode(array()));
+				}
+				foreach ($pop as $po){
+					$return[]=post_json(get_post($po['post_id']));
+				}
+				echo json_encode($return);
+				break;
+			case 'cat':
+				$pop=$wpdb->get_results('SELECT post_id FROM wp_score LEFT JOIN wp_term_relationships ON wp_score.post_id=wp_term_relationships.object_id WHERE term_taxonomy_id=(SELECT term_id FROM wp_terms WHERE slug=\''.urlencode($_GET['slug']).'\' LIMIT '.(($page-1)*$obj_per_page).','.$obj_per_page.')',ARRAY_N);
+				if(count($pop)==0){
+					die(json_encode(array()));
+				}
+				foreach ($pop as $po){
+					$return[]=post_json(get_post($po['post_id']));
+				}
+				echo json_encode($return);
+				break;
+			case 'tag':
+				$pop=$wpdb->get_results('SELECT post_id FROM wp_score LEFT JOIN wp_term_relationships ON wp_score.post_id=wp_term_relationships.object_id WHERE term_taxonomy_id=(SELECT term_id FROM wp_terms WHERE slug=\''.urlencode($_GET['slug']).'\ LIMIT '.(($page-1)*$obj_per_page).','.$obj_per_page.'\)',ARRAY_N);
+				if(count($pop)==0){
+					die(json_encode(array()));
+				}
+				foreach ($pop as $po){
+					$return[]=post_json(get_post($po['post_id']));
+				}
+				echo json_encode($return);
+				break;
+		}
+		break;
+	default:die(json_encode(array('msg'=>'Invalid argument.')));
 }
 /*
  * $return = array();
@@ -184,4 +237,4 @@ $return['preview'] = '预览图URL';
 $return['downloads'] = '下载次数';
 $return['favorites'] = '收藏次数';
 $return['comments'] = $post->comment_count;
-*/
+*/?>

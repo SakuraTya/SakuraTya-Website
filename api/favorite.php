@@ -1,5 +1,5 @@
 <?php
-require_once("./api-config.php");
+require_once("../wp-config.php");
 add_post_meta($_GET['id'], "favorited", 0, true);
 $json = array();
 function add_favorite($post_id, $user_id){

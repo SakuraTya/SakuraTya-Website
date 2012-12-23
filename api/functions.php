@@ -1,6 +1,5 @@
 <?php
 //header("Content-Type: text/plain; charset=utf-8");
-require_once("./api-config.php");
 function fileext($file)
 {
 	return pathinfo($file, PATHINFO_EXTENSION);
@@ -22,16 +21,4 @@ function get_favorites($post_id){
 }
 function get_downloads($post_id){
 	return get_post_meta($post_id, "downloads", true);
-}
-function get_post_info($post_id){
-	$post = get_post($post_id, ARRAY_A);
-	$user = get_userdata($post['ID']);
-	$info = array(
-			'title'=>$post['post_title'], 
-			'url'=>$post['guid'],
-			'comments'=>$post['comment_count'],
-			'author'=>$user->data->display_name,
-			'preview'=>get_field("preview", $post_id));
-	print_r($info);
-	print_r(get_userdata(1));
 }

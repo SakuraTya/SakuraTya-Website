@@ -38,7 +38,7 @@ $cats=get_the_category();?>
             <?php echo $post->post_content;?>
             </div>
             <div id="work_info_wrapper">
-                <?php author_info(the_post()->post_author);?>
+                <?php author_info($post->post_author);?>
                     <div id="project_info">
                     <div id="project_brief">
                     <span>发表于：<?php echo strftime('%Y年%m月%d日',strtotime($post->post_modified));?></span>

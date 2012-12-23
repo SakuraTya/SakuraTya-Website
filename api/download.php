@@ -1,5 +1,5 @@
 <?php
-require_once("./api-config.php");
+require_once("../wp-config.php");
 function output_json($json) {
 	echo json_encode($json);
 	exit;

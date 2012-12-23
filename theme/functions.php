@@ -2,6 +2,15 @@
 define('FAV_NAME', $table_prefix . "favorites");
 add_action('profile_personal_options','add_sign_option');
 add_action('profile_update', 'update_sign');
+add_action('publish_post','recalc_score');
+add_action('deleted_post','delete_score');
+add_action('edit_post','delete_score');
+function recalc_score($id){
+	
+}
+function delete_score($id){
+	
+}
 function update_sign($uid){
 	if(!isset($_POST['sign'])){
 		return;
@@ -40,9 +49,10 @@ function author_info($id){
 	?>
 	<div id="author_info">
 	<!-- The href property of #author_avatar_wrapper and #author_name is both the author profile page's url -->
-	<a id="author_avatar_wrapper" href="<?php echo get_author_posts_url($id);?>"><img src="<?php echo get_custom_avatar();?>" /></a>
+	<!-- <?php echo $id;?> -->
+	<a id="author_avatar_wrapper" href="<?php echo get_author_posts_url($id);?>"><img src="<?php echo get_custom_avatar($id);?>" /></a>
 	<a id="author_name" href="<?php echo get_author_posts_url($id);?>"><?php echo get_author_name($id);?></a>
-	<div id="author_sign"><?php echo get_sign(get_current_user_id());?></div>
+	<div id="author_sign"><?php echo get_sign($id);?></div>
 	<div id="author_function_wrapper"></div>
 	<div class="info_section_label">
 	<div id="info_label_author"></div>
@@ -113,7 +123,7 @@ function work_block($post){
 	$fc=get_favorites($id);
 	//@todo 排行榜每天0点更新，需在配置时写入crontab
 	if (function_exists('get_field')){
-		$aid = get_field('preview',$post_id);
+		$aid = get_field('preview',$id);
 		if (!$aid == ""){
 			$a = wp_get_attachment_image_src($aid, array(240,180));
 			$b = wp_get_attachment_image_src($aid,'full');
