@@ -96,6 +96,9 @@ function layoutWorkPanel() {
         // console.log(paginator_width);
         $(this).css({"width":  paginator_width+"px", "margin-left": "auto", "margin-right": "auto"});
     });
+
+    //handle comment submit button
+    $("#comment_submit").convertToButton();
 }
 
 $(document).ready(function(){

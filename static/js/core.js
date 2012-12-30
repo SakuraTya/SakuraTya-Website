@@ -40,7 +40,7 @@ function navMenuBuilding(currentItem) {
 function buildList(argument) {
     
     var listAdapter = {
-        "list": new Array();
+        "list": new Array(),
         "getCount": function() {return list.length;},
         "getView": function() {
 

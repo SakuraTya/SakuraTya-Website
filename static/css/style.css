@@ -18,6 +18,11 @@ h1, h2, h3, h4, h5, h6, hr, p, a, div, span, li, ul, ol, dt, dl, dd,fieldset, le
 
 a {
     text-decoration: none;
+    color: #156bcb;
+}
+
+a:hover {
+    color: #3385ff;
 }
 
 #header_bar {
