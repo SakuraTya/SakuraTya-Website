@@ -1,0 +1,29 @@
+.edit_textarea,.reply_textarea {
+	outline: none;
+	background: #F0F0F0;
+	border-color: #888888;
+	resize: vertical;
+}
+
+.edit_action_links,.reply_action_links {
+	font-size: 0.86em;
+	color: #BBB;
+	display: block;
+	float: block;
+}
+
+.edit_action_submit,.reply_action_submit {
+	margin-top: -7px;
+	cursor: pointer;
+}
+
+.edit_action_cancel,.reply_action_cancel  {
+	margin-top: -7px;
+	margin-left: 10px;
+	cursor: pointer;
+}
+
+.ajax_loading{
+	position:relative;
+	left:50%
+}

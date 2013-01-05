@@ -1,15 +1,21 @@
-<?php get_header();$dir = get_stylesheet_directory_uri()."/";?>
+<?php get_header();$dir = get_stylesheet_directory_uri()."/";global $post;?>
 <link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/detail.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/editable.css">
+<link rel="stylesheet" type="text/css" href="<?php echo $dir;?>css/buttons.css">
 <script type="text/javascript" src="<?php echo $dir;?>js/detail.js"></script>
+<script type="text/javascript" src="<?php echo $dir;?>js/noty/jquery.noty.js"></script>
+<script type="text/javascript" src="<?php echo $dir;?>js/noty/layouts/top.js"></script>
+<script type="text/javascript" src="<?php echo $dir;?>js/noty/themes/default.js"></script>
 <script type="text/javascript">
             $(document).ready(function() {
                 var global_StartItem = 1; //this javascript variable need to convert to php variable.
                 navMenuBuilding(global_StartItem);
             });
+            ajaxurl="<?php echo admin_url('admin-ajax.php'); ?>";
+            post_id=<?php echo $post->ID;?>;
 </script>
 <body>
 <?php nav_menu();
-global $post;
 $cats=get_the_category();?>
 <div class="main_content_wrapper">
 <div id="detail_header" class="group_header_bg">
@@ -35,7 +41,11 @@ $cats=get_the_category();?>
                 </div>
             </div>
             <div id="work_content_wrapper">
-            <?php echo $post->post_content;?>
+            	<div id="article">
+            		<?php echo $post->post_content;?>
+            	</div>
+            	<?php comments_template();?>
+            	<script type="text/javascript" src="<?php echo $dir;?>js/ajax_comment.js"></script>
             </div>
             <div id="work_info_wrapper">
                 <?php author_info($post->post_author);?>

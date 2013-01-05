@@ -194,10 +194,6 @@
 .work_content_wrapper div.work_title a {
     padding: 0px 11px 0px 11px;
     line-height: 35px;
-    color: #156bcb;
-}
-.work_content_wrapper div.work_title a:hover {
-    color: #1e90d1;
 }
 .work_content_wrapper div.work_author {
     width: 100%;
@@ -217,10 +213,6 @@
     display: block;
     padding: 4px 12px 3px 2px;
     font-size: 0.9em;
-    color: #156bcb;
-}
-.work_content_wrapper div.work_author a:hover {
-    color: #1e90d1;
 }
 
 .work_content_wrapper div.work_tags {

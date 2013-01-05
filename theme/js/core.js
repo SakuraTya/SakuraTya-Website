@@ -36,3 +36,19 @@ function navMenuBuilding(currentItem) {
         }
     })
 }
+
+function buildList(argument) {
+    
+    var listAdapter = {
+        "list": new Array(),
+        "getCount": function() {return list.length;},
+        "getView": function() {
+
+        }
+    };
+
+    var gridList = $(".work_panel_wrapper").gridList();
+
+    gridList.setAdapter(listAdapter);
+
+}
