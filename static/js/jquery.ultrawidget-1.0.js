@@ -596,7 +596,7 @@
                 if (this.adapter) {
                     var child = this.adapter.getView(position);
                     if(child) {
-                        addViewInLayout(position, before, child);
+                        addViewInLayout(this, position, before, child);
                     }
                 }
             },
@@ -621,6 +621,19 @@
                     this.recycleBin.appendTo(this);
                 }
             },
+            "layoutChildren": function(startPosition) {
+                if(!this.adapter) {
+                    return;
+                }
+                var count = this.adapter.getCount();
+                if(startPosition >= count || startPosition < 0) {
+                    return;
+                }
+                
+                for(var i = startPosition; i < count; i++) {
+                    this.addView(i, false);
+                }
+            },
             "recycleBin": new Array(),
             "adapter": {
                 "list": null,
@@ -640,48 +653,54 @@
             "setAdapter": function(listAdapter) {
                 $.extend(this.adapter, listAdapter || {});
                 if(this.adapter) {
-
+                    this.empty();
+                    this.layoutChildren(0);
                 }
             }
         });
 
-        var addViewInLayout = function(position, before, view) {
-            var children = this.children();
+        var addViewInLayout = function(rootView, position, before, view) {
+            var children = rootView.children();
+            if(children.length == 0) {
+                rootView.append(view);
+                layout(rootView, 0, 0);
+                return;
+            }
             var referenceView = children.eq(position);
             if(before) {
                 if(referenceView) {
                     referenceView.before(view);
-                    layout(position, children.length - 1);
+                    layout(rootView, position, children.length - 1);
                 } else {
                     // If referenceView is undefined. we just insert the view to the first position
                     referenceView = children.first();
                     referenceView.before(view);
-                    layout(0, children.length - 1);
+                    layout(rootView, 0, children.length - 1);
                 }
             } else {
                 if(referenceView) {
                     referenceView.after(view);
-                    layout(position + 1, children.length - 1);
+                    layout(rootView, position + 1, children.length - 1);
                 } else {
                     // If referenceView is undefined. we just insert the view to the last position.
                     referenceView = children.last();
                     referenceView.after(view);
-                    layout(children.length - 1, children.length - 1);
+                    layout(rootView, children.length - 1, children.length - 1);
                 }
             }
         }
-        var layout = function(startPosition, endPosition) {
-            var children = this.children();
-            var maxRow = (this.adapter.getCount - 1) / numColumn;
-            for(var pos = startPosition; i<=endPosition; i++) {
-                var row = pos / numColumn;
+        var layout = function(rootView, startPosition, endPosition) {
+            var children = rootView.children();
+            var maxRow = (rootView.adapter.getCount - 1) / params.numColumn;
+            for(var pos = startPosition; pos<=endPosition; pos++) {
+                var row = pos / params.numColumn;
                 var marginRight = params.horizontalSpacing;
                 var marginBottom = params.verticalSpacing;
                 if(row == maxRow) {
                     marginBottom = "0px";
                 }
-                var rowDelta = pos % numColumn;
-                if(rowDelta == numColumn - 1) {
+                var rowDelta = pos % params.numColumn;
+                if(rowDelta == params.numColumn - 1) {
                     marginRight = "0px";
                 }
                 var child = children.eq(pos);
@@ -693,6 +712,11 @@
                 });
             }
         }
+        var onListScroll = function(argument) {
+            var loadMoreIndicator = this.children(".gridlist_load_more");
+            
+        }
+
         return this;
     }
  })(jQuery);

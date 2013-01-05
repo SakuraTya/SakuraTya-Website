@@ -238,3 +238,11 @@ div.button_glow_layer_selected {
     padding-left: 5px;
     padding-right: 5px;
 }
+
+/**
+ * Gridlist styles
+ */
+ .gridlist_load_more {
+    display: block;
+    clear: both;
+ }
