@@ -1,4 +1,4 @@
-/*
+﻿/*
 Theme Name: LightGallery
 Theme URI: http://sakuratya.com/
 Description: A light weight theme to exhibit artworks. 
@@ -8,7 +8,8 @@ Version: 1.0
 */
 
 body {
-    margin: 0;
+    margin: 0px;
+    padding: 0px;
     width: 100%;
     background: #f0f0f0;
     font-family: "Geneva","微软雅黑","幼圆",Sans-serif;
@@ -20,6 +21,11 @@ h1, h2, h3, h4, h5, h6, hr, p, a, div, span, li, ul, ol, dt, dl, dd,fieldset, le
 
 a {
     text-decoration: none;
+    color: #156bcb;
+}
+
+a:hover {
+    color: #3385ff;
 }
 
 #header_bar {
@@ -38,7 +44,7 @@ a {
 
 #header_wrapper {
     margin: 0px auto 0px auto;
-    width: 1024px;
+    width: 1026px;
     height: 100%;
 }
 
@@ -48,14 +54,14 @@ a {
     position: relative;
     width: 291px;
     height: 94px;
-    background-image: url("img/spirite.png");
+    background-image: url("./img/spirite.png");
     background-repeat: no-repeat;
     background-position: 0  0;
 }
 
 #nav_menu_wrapper {
     margin: 8px auto 9px auto;
-    width: 1024px;
+    width: 1026px;
     padding: 0px;
 }
 
@@ -65,7 +71,7 @@ a {
     position: relative;
     list-style-type: none;
     padding: 0px;
-    overflow: auto;
+    overflow: visible;
 }
 #nav_menu li {
     display: block;
@@ -116,7 +122,7 @@ div.group_header_bg {
     margin-top: 98px;
     width: 100%;
     height: 273px;
-    background: url("img/bottom-gradient.png") repeat-x;
+    background: url("./img/bottom-gradient.png") repeat-x;
 }
 
 #nav_links_area {
@@ -169,4 +175,12 @@ div.group_header_bg {
 #sns_link a {
     display: inline-block;
     padding-left: 22px;
+}
+
+#user_container_wrapper {
+    position: absolute;
+}
+
+.fancybox_fix_width {
+    max-width: 95%;
 }

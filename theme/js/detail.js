@@ -292,4 +292,6 @@ function layoutWorkPanel(totalItems,num_per_page) {
 $(document).ready(function(){
     layoutWorkInfo();
     layoutUserCPL();
+  //handle comment submit button
+  $("#comment_submit").convertToButton();
 });

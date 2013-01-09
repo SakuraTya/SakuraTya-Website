@@ -571,4 +571,128 @@
             }                    
         });
     }
+
+    /**
+     * Create a grid view with vertical scrolling. This grid view has animation effect when create and remove a child.
+     * You should implement an adapter and use setAdapterMethod to create a grid view.
+     *
+     */
+    $.fn.gridList = function(params) {
+        params = $.extend({
+            "stretchMode": false,
+            "numColumn": 4,
+            "columnWidth": "250px",
+            "verticalSpacing": "23px",
+            "horizontalSpacing": "6px"
+        }, params || {});
+
+        $.extend(this, {
+            /**
+             * Add a view before or after specific position.
+             * @param position, an integer value, define where should be insert to.
+             * @param before, an boolean value, define if should insert before the position or after it.
+             */
+            "addView":function(position, before) {
+                if (this.adapter) {
+                    var child = this.adapter.getView(position);
+                    if(child) {
+                        addViewInLayout(position, before, child);
+                    }
+                }
+            },
+            /**
+             * Remove a view in specific position.
+             * position, an integer value, define which view of position should be removed.
+             */
+            "removeView": function(position) {
+                var children = this.children();
+                var victim = children.eq(position);
+                if(victim){
+                    victim.remove();
+                    layout(position, children.length);
+                }
+            },
+            "detachAllViews": function() {
+                var detachedChildren = this.children().detach();
+                recycleBin = detachedChildren;
+            },
+            "attachDetachedViews": function() {
+                if(this.recycleBin) {
+                    this.recycleBin.appendTo(this);
+                }
+            },
+            "recycleBin": new Array(),
+            "adapter": {
+                "list": null,
+                "getCount": function() {
+                    return list.length;
+                },
+                "getItem": function(position) {
+                    return list[position];
+                },
+                "getItemId": function(position) {
+                    return 0;
+                },
+                "getView": function(position) {
+                    return null;
+                }
+            },
+            "setAdapter": function(listAdapter) {
+                $.extend(this.adapter, listAdapter || {});
+                if(this.adapter) {
+
+                }
+            }
+        });
+
+        var addViewInLayout = function(position, before, view) {
+            var children = this.children();
+            var referenceView = children.eq(position);
+            if(before) {
+                if(referenceView) {
+                    referenceView.before(view);
+                    layout(position, children.length - 1);
+                } else {
+                    // If referenceView is undefined. we just insert the view to the first position
+                    referenceView = children.first();
+                    referenceView.before(view);
+                    layout(0, children.length - 1);
+                }
+            } else {
+                if(referenceView) {
+                    referenceView.after(view);
+                    layout(position + 1, children.length - 1);
+                } else {
+                    // If referenceView is undefined. we just insert the view to the last position.
+                    referenceView = children.last();
+                    referenceView.after(view);
+                    layout(children.length - 1, children.length - 1);
+                }
+            }
+        }
+        var layout = function(startPosition, endPosition) {
+            var children = this.children();
+            var maxRow = (this.adapter.getCount - 1) / numColumn;
+            for(var pos = startPosition; i<=endPosition; i++) {
+                var row = pos / numColumn;
+                var marginRight = params.horizontalSpacing;
+                var marginBottom = params.verticalSpacing;
+                if(row == maxRow) {
+                    marginBottom = "0px";
+                }
+                var rowDelta = pos % numColumn;
+                if(rowDelta == numColumn - 1) {
+                    marginRight = "0px";
+                }
+                var child = children.eq(pos);
+                child.css({
+                    "margin-top": "0px",
+                    "margin-right": marginRight,
+                    "margin-bottom": marginBottom,
+                    "margin-left": "0px"
+                });
+            }
+        }
+        return this;
+    }
  })(jQuery);

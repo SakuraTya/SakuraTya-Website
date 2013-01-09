@@ -5,12 +5,122 @@ add_action('profile_update', 'update_sign');
 add_action('publish_post','recalc_score');
 add_action('deleted_post','delete_score');
 add_action('edit_post','delete_score');
+add_action('wp_ajax_edit_comment','sakuratya_handle_edit_comment');
+add_action('wp_ajax_nopriv_update_comments','sakuratya_handle_update_comments');
+add_action('wp_ajax_update_comments','sakuratya_handle_update_comments');
+add_action('wp_ajax_insert_comment','sakuratya_handle_insert_comment');
+
+function sakuratya_handle_insert_comment(){
+	header('Content-Type:text/plain;charset=utf-8');
+	$time=current_time('mysql');
+	$time_gmt=current_time('mysql',true);
+	$data=array(
+			'comment_post_ID'=>$_REQUEST['pid'],
+			'comment_author'=>wp_get_current_user()->data->display_name,
+			'comment_author_email'=>wp_get_current_user()->data->user_email,
+			'comment_author_url'=>wp_get_current_user()->data->user_url,
+			'comment_content'=>$_REQUEST['content'],
+			'comment_type'=>'',
+			'comment_parent'=>isset($_REQUEST['parent'])?$_REQUEST['parent']:0,
+			'user_id'=>wp_get_current_user()->data->ID,
+			'comment_author_IP'=>$_SERVER['REMOTE_ADDR'],
+			'comment_agent'=>$_SERVER['HTTP_USER_AGENT'],
+			'comment_date'=>$time,
+			'comment_date_gmt'=>$time_gmt,
+			'comment_approved' => 1
+			);
+	die(json_encode(array('status'=>wp_insert_comment($data))));
+}
+
+function sakuratya_handle_update_comments(){
+	header('Content-Type:text/plain;charset=utf-8');
+	if(!isset($_REQUEST['id'])){
+		die();
+	}
+	$comments=get_comments(array(
+			"post_id"=>$_REQUEST['id'],
+			'status' => 'approve'
+			));
+	wp_list_comments(array('callback'=>'sakuratya_list_comments','max_depth'=>3),$comments);
+	die();
+}
+
+function sakuratya_handle_edit_comment(){
+	header('Content-Type:text/plain;charset=utf-8');
+	if(isset($_REQUEST['content'])&&isset($_REQUEST['cid'])){}else{
+		die(json_encode(array('error'=>'Invalid argument.')));
+	}
+	$commentarr=get_comment($_REQUEST['cid'],ARRAY_A);
+	date_default_timezone_set('Asia/Shanghai');
+	$commentarr['comment_date']=strftime('%Y-%m-%d %H:%M:%S');
+	date_default_timezone_set('Europe/London');
+	$commentarr['comment_date_gmt']=strftime('%Y-%m-%d %H:%M:%S');
+	date_default_timezone_set('Asia/Shanghai');
+	$commentarr['comment_agent']=$_SERVER['HTTP_USER_AGENT'];
+	$commentarr['comment_author_IP']=$_SERVER['REMOTE_ADDR'];
+	$commentarr['comment_author_url']=get_author_posts_url(get_user_by('email',$commentarr['comment_author_email'])->ID);
+	$commentarr["comment_content"]=$_REQUEST['content'];
+	die(json_encode(array('status'=>wp_update_comment($commentarr))));
+}
+
+function sakuratya_list_comments($comment, $args, $depth){
+	$GLOBALS['comment'] = $comment;
+	?> 
+	<li <?php comment_class()?> id="li-comment-<?php comment_ID() ?>">
+	<div class="comment" id="comment_<?php comment_ID() ?>">
+		<?php if($comment->comment_parent==0){?>
+			<div class="comment_meta">
+				<div class="comment_author">
+					<a class="comment_author_avatar" href="<?php echo get_author_posts_url(get_user_by('email',$comment->comment_author_email)->ID);?>"><img src="<?php echo get_custom_avatar($comment->user_id)?>" /></a>
+					<a class="comment_author_name" href="<?php echo get_author_posts_url(get_user_by('email',$comment->comment_author_email)->ID);?>"><?php echo $comment->comment_author;?></a>
+				</div>
+				<div class="comment_timestamp">
+					<span>发表于</span>
+					<a href="#comment_1">
+						<time datetime="<?php echo $comment->comment_date;?>"><?php echo $comment->comment_date;?></time>
+					</a>
+				</div>
+			</div>
+		<?php }else{?>
+			<?php $parent=get_comment($comment->comment_parent);?>
+			<div class="comment_meta">
+				<div class="comment_author">
+					<a class="comment_author_avatar" href="<?php echo get_author_posts_url(get_user_by('email',$comment->comment_author_email)->ID);?>"><img src="<?php echo get_custom_avatar($comment->user_id)?>" /></a>
+					<a class="comment_author_name" href="<?php echo get_author_posts_url(get_user_by('email',$comment->comment_author_email)->ID);?>"><?php echo $comment->comment_author;?></a>
+				</div>
+				<div class="comment_conversation">
+					<span>对</span>
+					<a href="<?php echo get_author_posts_url(get_user_by('email',$parent->comment_author_email)->ID);?>"><?php echo $parent->comment_author;?></a>
+					<span>的回复</span>
+				</div>
+				<div class="comment_timestamp">
+					<span>发表于</span>
+					<a href="#comment_1">
+						<time datetime="<?php echo $comment->comment_date;?>"><?php echo $comment->comment_date;?></time>
+					</a>
+				</div>
+			</div>
+		<?php }?>
+	<div class="comment_content">
+		<p><?php echo $comment->comment_content;?></p>
+	</div>
+	<div class="reply"><div class="reply_icon"></div><span>回复</span></div>
+	<?php if(current_user_can('edit_comment')&&current_user_can('moderate_comments')){?>
+	<div class="edit_link" cid="<?php comment_ID()?>"><div class="edit_icon"></div><span>编辑</span></div>
+	<?php }?>
+	<div style="display:block;clear:both;"></div>
+</div>
+	<?php 
+}
+
 function recalc_score($id){
 	
 }
+
 function delete_score($id){
 	
 }
+
 function update_sign($uid){
 	if(!isset($_POST['sign'])){
 		return;
@@ -19,9 +129,11 @@ function update_sign($uid){
 	$sign=strip_tags($sign);
 	update_user_meta($uid, 'sign', $sign);
 }
+
 function get_sign($uid){
 	return get_user_meta($uid,'sign',true);
 }
+
 function add_sign_option($profileuser){
 	?>
 	<table class="form-table">
@@ -148,7 +260,7 @@ function work_block($post){
 		</div>
         <div class="work_author">
 			<span>by</span>
-			<a href="<?php echo get_author_posts_url($post->post_author);?>"><?php echo get_author_name($post->post_author);?></a>
+			<a href="<?php echo get_author_posts_url($post->post_author);?>"><?php echo get_the_author_meta('display_name',$post->post_author);?></a>
 		</div>
 		<div class="work_tags">
 			<!-- data attribute in li element is tagID, the text is tagName -->
