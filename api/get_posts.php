@@ -168,7 +168,8 @@ switch ($_GET['mode']){
 		}
 		$id=$_GET['id'];
 		$page=isset($_GET['page'])?$_GET['page']:1;
-		$query=new WP_Query('author='.$id.'&posts_per_page=4&paged='.$page);
+		$limit=isset($_GET['limit'])?$_GET['limit']:8;
+		$query=new WP_Query('author='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 		if($query){
 			foreach ($query->posts as $post){
 				$return[]=post_json($post);
