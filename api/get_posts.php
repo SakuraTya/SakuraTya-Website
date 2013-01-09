@@ -59,11 +59,12 @@ switch ($_GET['mode']){
 			die(json_encode(array('msg'=>'You should give this page the category\'s ID(integer) by GET method.')));
 		}
 		$id=$_GET['id'];
+		$limit=isset($_GET['limit'])?$_GET['limit']:8;
 		$page=isset($_GET['page'])?$_GET['page']:1;
 		$time=isset($_GET['time'])?$_GET['time']:'all';
 		switch($time){
 			case 'all':
-				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('cat='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				if($query){
 					foreach ($query->posts as $post){
 						$return[]=post_json($post);
@@ -73,7 +74,7 @@ switch ($_GET['mode']){
 				break;
 			case 'week':
 				add_filter('posts_where', 'filter_where_week');
-				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('cat='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_week');
 				if($query){
 					foreach ($query->posts as $post){
@@ -84,7 +85,7 @@ switch ($_GET['mode']){
 				break;
 			case 'month':
 				add_filter('posts_where', 'filter_where_month');
-				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('cat='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_month');
 				if($query){
 					foreach ($query->posts as $post){
@@ -95,7 +96,7 @@ switch ($_GET['mode']){
 				break;
 			case '3months':
 				add_filter('posts_where', 'filter_where_3months');
-				$query=new WP_Query('cat='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('cat='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_3months');
 				if($query){
 					foreach ($query->posts as $post){
@@ -114,9 +115,10 @@ switch ($_GET['mode']){
 		$id=$_GET['id'];
 		$page=isset($_GET['page'])?$_GET['page']:1;
 		$time=isset($_GET['time'])?$_GET['time']:'all';
+		$limit=isset($_GET['limit'])?$_GET['limit']:8;
 		switch($time){
 			case 'all':
-				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				if($query){
 					foreach ($query->posts as $post){
 						$return[]=post_json($post);
@@ -126,7 +128,7 @@ switch ($_GET['mode']){
 				break;
 			case 'week':
 				add_filter('posts_where', 'filter_where_week');
-				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_week');
 				if($query){
 					foreach ($query->posts as $post){
@@ -137,7 +139,7 @@ switch ($_GET['mode']){
 				break;
 			case 'month':
 				add_filter('posts_where', 'filter_where_month');
-				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_month');
 				if($query){
 					foreach ($query->posts as $post){
@@ -148,7 +150,7 @@ switch ($_GET['mode']){
 				break;
 			case '3months':
 				add_filter('posts_where', 'filter_where_3months');
-				$query=new WP_Query('tag_id='.$id.'&posts_per_page=8&paged='.$page);
+				$query=new WP_Query('tag_id='.$id.'&posts_per_page='.$limit.'&paged='.$page);
 				remove_filter('posts_where', 'filter_where_3months');
 				if($query){
 					foreach ($query->posts as $post){
