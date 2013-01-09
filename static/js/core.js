@@ -149,7 +149,7 @@ function buildList(argument) {
                     return view;
                 }
             };
-            var gridList = $(".works_panel_wrapper").gridList();
+            var gridList = $("#new_works_show .works_panel_wrapper").gridList();
 
             gridList.setAdapter(listAdapter);
             //trim the long title to fit the size of work panel

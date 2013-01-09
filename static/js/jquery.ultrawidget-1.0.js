@@ -661,45 +661,49 @@
 
         var addViewInLayout = function(rootView, position, before, view) {
             var children = rootView.children();
-            if(children.length == 0) {
+            var childCount = children.length;
+            if(position >= childCount && childCount > 0) {
+                if(before) {
+                    rootView.prepend(view);
+                    childCount++;
+                    layout(rootView, 0, childCount-1);
+                } else {
+                    rootView.append(view);
+                    children++;
+                    layout(rootView, childCount - 1, childCount -1);
+                }
+            } else if(childCount == 0 || position < 0) {
+                // If there are no child yet, just insert the view. if position is less than zero, just insert to the last position.
                 rootView.append(view);
-                layout(rootView, 0, 0);
-                return;
-            }
-            var referenceView = children.eq(position);
-            if(before) {
-                if(referenceView) {
+                childCount++;
+                layout(rootView, childCount - 1, childCount - 1);
+            } else if(position >=0 && position < childCount && childCount > 0) {
+                var referenceView = children.eq(position);
+                if(before) {
                     referenceView.before(view);
-                    layout(rootView, position, children.length - 1);
+                    childCount++;
+                    layout(rootView, (position > 0) ? (position - 1) : 0, childCount - 1);
                 } else {
-                    // If referenceView is undefined. we just insert the view to the first position
-                    referenceView = children.first();
-                    referenceView.before(view);
-                    layout(rootView, 0, children.length - 1);
-                }
-            } else {
-                if(referenceView) {
                     referenceView.after(view);
-                    layout(rootView, position + 1, children.length - 1);
-                } else {
-                    // If referenceView is undefined. we just insert the view to the last position.
-                    referenceView = children.last();
-                    referenceView.after(view);
-                    layout(rootView, children.length - 1, children.length - 1);
+                    childCount++;
+                    layout(rootView, position + 1, childCount - 1);
                 }
             }
+            
         }
         var layout = function(rootView, startPosition, endPosition) {
             var children = rootView.children();
-            var maxRow = (rootView.adapter.getCount - 1) / params.numColumn;
+            var maxRow = Math.floor((rootView.adapter.getCount() - 1) / params.numColumn);
+            console.log("maxRow:" + maxRow + " startPosition:"+ startPosition + " endPosition:" + endPosition);
             for(var pos = startPosition; pos<=endPosition; pos++) {
-                var row = pos / params.numColumn;
+                var row = Math.floor(pos / params.numColumn);
                 var marginRight = params.horizontalSpacing;
                 var marginBottom = params.verticalSpacing;
                 if(row == maxRow) {
                     marginBottom = "0px";
                 }
                 var rowDelta = pos % params.numColumn;
+                console.log("rowDelta:" + rowDelta);
                 if(rowDelta == params.numColumn - 1) {
                     marginRight = "0px";
                 }
