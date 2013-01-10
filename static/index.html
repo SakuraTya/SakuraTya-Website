@@ -16,22 +16,7 @@
             $(document).ready(function() {
                 var global_StartItem = 1; //this javascript variable need to convert to php variable.
                 navMenuBuilding(global_StartItem);
-                // var gridList = $("#header_bar").gridList();
-                // gridList.setAdapter("adapter");
-                $(window).scroll(function(event){
-                    var bodyScrollTop = document.body.scrollTop;
-                    console.log("bodyScrollTop="+bodyScrollTop);
-                    var work_paneloffset = $(".works_panel:last").offset();
-                    console.log("work_paneloffset=" + work_paneloffset.top);
-                    console.log("viewPortHeight=" + window.innerHeight);
-                    var diff = work_paneloffset.top - bodyScrollTop;
-                    console.log("work_special_indicator=" + $(".work_special_indicator").offset().top);
-                    console.log("diff=" + diff);
-                    if(  diff< window.innerHeight ) {
-                        console.log("last work panel is show in screen");
-                    }
-                    console.log("-------------------------------------------");
-                });
+                
             });
         </script>
     </head>

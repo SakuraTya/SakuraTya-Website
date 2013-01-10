@@ -269,7 +269,6 @@
             "maxWords": 0,
             "targetFrame": "li"
         }, params || {});
-        var holder = this;
         return this.each(function() {
             $(this).find(params.targetFrame).each(function(index, item){
                 var tag_frame = $(item).addClass("tag_frame");
@@ -511,7 +510,9 @@
     };
 
     /**
-     * 
+     * This plugin is use to ellipsis the text to ensure the text is not overflow the parent.
+     * To make sure the plugin work properly. The element and the container should have been added
+     * to the Dom tree.
      */
     $.fn.ellipsis = function(params){ 
         params = $.extend({
@@ -583,10 +584,15 @@
             "numColumn": 4,
             "columnWidth": "250px",
             "verticalSpacing": "23px",
-            "horizontalSpacing": "6px"
+            "horizontalSpacing": "6px",
+            "enterEffect": null,
+            "eraseEffect": null,
+            "loadOnScroll": true, // If set to true, the onDataLoading is invoked when scroll to the ".gridlist_load_more" element.
+            "maxLoadTimes": 4 // Use to limit the auto load when scrolling. only works when loadOnScroll is true.
         }, params || {});
 
         $.extend(this, {
+            "isLoadingData": false,
             /**
              * Add a view before or after specific position.
              * @param position, an integer value, define where should be insert to.
@@ -606,11 +612,14 @@
              */
             "removeView": function(position) {
                 var children = this.children();
-                var victim = children.eq(position);
-                if(victim){
+                if(children.length == 0 || position < 0 || position >= children.length) {
+                    return;
+                } else if(position >= 0 && position < children.length) {
+                    var victim = children.eq(position);
                     victim.remove();
-                    layout(position, children.length);
+                    layout(this, position, children.length);    
                 }
+                
             },
             "detachAllViews": function() {
                 var detachedChildren = this.children().detach();
@@ -621,10 +630,16 @@
                     this.recycleBin.appendTo(this);
                 }
             },
+            /**
+             * Perform a sequence layout from the given startPosition.
+             */
             "layoutChildren": function(startPosition) {
                 if(!this.adapter) {
                     return;
                 }
+                // Detach the load more indicator temporarily
+                var loadMoreIndicator = this.children(".gridlist_load_more").detach();
+
                 var count = this.adapter.getCount();
                 if(startPosition >= count || startPosition < 0) {
                     return;
@@ -633,8 +648,15 @@
                 for(var i = startPosition; i < count; i++) {
                     this.addView(i, false);
                 }
+                // attach the load more indicator into
+                if(loadMoreIndicator.length == 0) {
+                    loadMoreIndicator = $("<div>").addClass("gridlist_load_more");
+                }
+                loadMoreIndicator.appendTo(this);
             },
+
             "recycleBin": new Array(),
+
             "adapter": {
                 "list": null,
                 "getCount": function() {
@@ -652,11 +674,20 @@
             },
             "setAdapter": function(listAdapter) {
                 $.extend(this.adapter, listAdapter || {});
+                // Remove previous binded onListScroll Handler.
+                if(params.loadOnScroll) {
+                    $(window).unbind("scroll", onListScroll);
+                }
                 if(this.adapter) {
                     this.empty();
                     this.layoutChildren(0);
                 }
-            }
+                if(params.loadOnScroll) {
+                    
+                    $(window).bind("scroll", {"rootView": this}, onListScroll);
+                }
+            },
+            "onDataLoading": null
         });
 
         var addViewInLayout = function(rootView, position, before, view) {
@@ -689,7 +720,6 @@
                     layout(rootView, position + 1, childCount - 1);
                 }
             }
-            
         }
         var layout = function(rootView, startPosition, endPosition) {
             var children = rootView.children();
@@ -716,9 +746,28 @@
                 });
             }
         }
-        var onListScroll = function(argument) {
-            var loadMoreIndicator = this.children(".gridlist_load_more");
-            
+        var hasLoadMoreIndicatorShown = false;
+
+        var onListScroll = function(event) {
+            var rootView = event.data.rootView;
+            var loadMoreIndicator = rootView.children(".gridlist_load_more");
+            if(loadMoreIndicator.length==0) {
+                return false;
+            }
+            var bodyScrollTop = document.body.scrollTop;
+            var loadMoreIndicatorOffset = loadMoreIndicator.offset();
+            var diff = loadMoreIndicatorOffset.top - bodyScrollTop;
+            console.log("diff:" + diff);
+            if(diff < window.innerHeight && !rootView.isLoadingData && !hasLoadMoreIndicatorShown) {
+                hasLoadMoreIndicatorShown = true;
+                console.log("------ loadMoreIndicator is " + hasLoadMoreIndicatorShown);
+                if($.isFunction(rootView.onDataLoading)) {
+                    rootView.onDataLoading();
+                }
+            } else if(diff >= window.innerHeight && hasLoadMoreIndicatorShown){
+                hasLoadMoreIndicatorShown = false;
+                console.log("------ loadMoreIndicator is " + hasLoadMoreIndicatorShown);
+            }
         }
 
         return this;
