@@ -39,7 +39,7 @@ function navMenuBuilding(currentItem) {
 
 function buildList(argument) {
 
-    $.get("http://10.0.0.5/api/get_posts.php?mode=category&id=3&time=all", function(data) {
+    $.get("/api/get_posts.php?mode=category&id=3&time=all", function(data) {
         console.log(data);
         if(data) {
             var listAdapter = {

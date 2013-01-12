@@ -588,8 +588,16 @@
             "enterEffect": null,
             "eraseEffect": null,
             "loadOnScroll": true, // If set to true, the onDataLoading is invoked when scroll to the ".gridlist_load_more" element.
-            "maxLoadTimes": 4 // Use to limit the auto load when scrolling. only works when loadOnScroll is true.
+            "maxLoadTimes": 4, // Use to limit the auto load when scrolling. only works when loadOnScroll is true.
+            "maxDelay": 800 // Define the max delay when the last child is performing its animation.
         }, params || {});
+
+        // When grid_load_more indicator has shown, this 
+        var hasLoadMoreIndicatorShown = false;
+
+        // Prevent layout when addViewInLayout is invoked. This is useful for adding multiple children.
+        // 
+        var blockLayout = false;
 
         $.extend(this, {
             "isLoadingData": false,
@@ -598,11 +606,18 @@
              * @param position, an integer value, define where should be insert to.
              * @param before, an boolean value, define if should insert before the position or after it.
              */
-            "addView":function(position, before) {
+            "addView": function(position, before) {
                 if (this.adapter) {
                     var child = this.adapter.getView(position);
                     if(child) {
                         addViewInLayout(this, position, before, child);
+                        if(!blockLayout) {
+                            if(params.enterEffect) {
+                                params.enterEffect(child);
+                            } else {
+                                layoutAnimation(child);
+                            }
+                        }
                     }
                 }
             },
@@ -645,9 +660,26 @@
                     return;
                 }
                 
+                blockLayout = true;
+
                 for(var i = startPosition; i < count; i++) {
                     this.addView(i, false);
                 }
+
+                blockLayout = false;
+                var childCount = this.children().length;
+                layout(this, 0, childCount - 1);
+
+                this.children().each(function(position, childNode) {
+                    var child = $(childNode);
+                    var delay = position * (params.maxDelay / childCount);
+                    if(params.enterEffect) {
+                        params.enterEffect(child, delay);
+                    } else {
+                       layoutAnimation(child, delay);
+                    }
+                });
+
                 // attach the load more indicator into
                 if(loadMoreIndicator.length == 0) {
                     loadMoreIndicator = $("<div>").addClass("gridlist_load_more");
@@ -722,6 +754,9 @@
             }
         }
         var layout = function(rootView, startPosition, endPosition) {
+            if(blockLayout) {
+                return;
+            }
             var children = rootView.children();
             var maxRow = Math.floor((rootView.adapter.getCount() - 1) / params.numColumn);
             console.log("maxRow:" + maxRow + " startPosition:"+ startPosition + " endPosition:" + endPosition);
@@ -746,7 +781,7 @@
                 });
             }
         }
-        var hasLoadMoreIndicatorShown = false;
+        
 
         var onListScroll = function(event) {
             var rootView = event.data.rootView;
@@ -768,6 +803,19 @@
                 hasLoadMoreIndicatorShown = false;
                 console.log("------ loadMoreIndicator is " + hasLoadMoreIndicatorShown);
             }
+        }
+
+        var layoutAnimation = function(child, delay) {
+            
+            child.animate({
+                "left": "+=15",
+                "opacity": 0
+            },0);
+            child.delay(delay);
+            child.animate({
+                "left": "-=15",
+                "opacity": 1
+            }, 500);
         }
 
         return this;
