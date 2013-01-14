@@ -37,11 +37,11 @@ function navMenuBuilding(currentItem) {
     })
 }
 
-function buildList(argument) {
+function buildList(page) {
 
-    $.get("/api/get_posts.php?mode=category&id=3&time=all", function(data) {
+    $.get("/api/get_posts.php?mode=category&id=3&time=all&page="+page, function(data) {
         console.log(data);
-        if(data) {
+        if($.isArray(data)) {
             var listAdapter = {
                 "list": data,
                 "getCount": function() {
@@ -52,17 +52,16 @@ function buildList(argument) {
                     return buildWorkPanel(item);
                 }
             };
-            var gridList = $("#new_works_show .works_panel_wrapper").gridList();
-
-            gridList.setAdapter(listAdapter);
-            //trim the long title to fit the size of work panel
-            var workTitleWidth = gridList.find(".work_title").width();
-
-            gridList.find(".work_title a").ellipsis({
-                "width": workTitleWidth,
-                "useContainerPadding": true,
-                "useContainerMargin": false
+            var gridList = $("#new_works_show .works_panel_wrapper").gridList({
+                "loadMoreIndicator":createDefaultLoadMoreIndicator,
+                "onLayoutComplete": onLayoutComplete,
+                "onDataLoading": function(){
+                    loadData(++page, listAdapter, gridList);
+                },
+                "maxLoadTimes": 1
             });
+            gridList.setAdapter(listAdapter);
+            
         }
     }, "json");
 }
@@ -153,4 +152,125 @@ function buildWorkPanel(item) {
     $("<div>").addClass("work_special_indicator").appendTo(view);
 
     return view;
+}
+
+/**
+ * Create a default load more indicator according to the params.loadOnScroll
+ */
+function createDefaultLoadMoreIndicator(gridList) {
+    var loadMoreIndicator = $("<div>").addClass("gridlist_load_more");
+    
+    loadMoreIndicator.addClass("default_loadmoreIndicator");
+    var loadMoreWrapper = $("<div>").addClass("load_more_wrapper");
+    var loadMoreText = $("<div>").addClass("load_more_text").html("SHOW MORE");
+    loadMoreWrapper.append(loadMoreText).appendTo(loadMoreIndicator);
+    var loadMoreLoading = $("<div>").addClass("load_more_loading").appendTo(loadMoreWrapper);
+    var loadMoreOverlay = $("<div>").addClass("load_more_overlay").appendTo(loadMoreWrapper);
+    var loadMoreButton = $("<div>").addClass("load_more_button").appendTo(loadMoreWrapper);
+    gridList.originalTop = 0;
+    gridList.totalOffset = 10;
+    gridList.maxMoveDuration = 300;
+    loadMoreButton.hover(function(event){
+        loadMoreOverlay.clearQueue();
+        loadMoreOverlay.stop();
+        // if(originalTop === 0) {
+        //     originalTop = $.getInt(loadMoreOverlay.css("top"));
+        // }
+        var current = $.getInt(loadMoreOverlay.css("top"));
+        var offset = gridList.totalOffset - (current - gridList.originalTop);
+        if(offset > 0) {
+            var duration = offset * (gridList.maxMoveDuration / gridList.totalOffset);
+            loadMoreOverlay.animate({"top": "+="+offset}, duration);
+        }
+        
+        loadMoreOverlay.delay(500);
+    },function(event){
+        if(gridList.isLoadingData) {
+            return;
+        }
+        var current = $.getInt(loadMoreOverlay.css("top"));
+        var offset = current - gridList.originalTop;
+        if(offset > 0) {
+            var duration = offset * (gridList.maxMoveDuration / gridList.totalOffset);
+            loadMoreOverlay.animate({"top": "-="+offset}, duration);
+        }
+    });
+    loadMoreButton.click(function(event){
+        
+        if($.isFunction(gridList.onDataLoading)) {
+            
+            gridList.onDataLoading();
+        }
+    });
+    
+    return loadMoreIndicator;
+}
+
+function loadData(page, adapter, gridList) {
+    gridList.isLoadingData = true;
+    var loadMoreText = gridList.find(".gridlist_load_more .load_more_text");
+    var loadMoreLoading = gridList.find(".gridlist_load_more .load_more_loading");
+    var loadMoreButton = gridList.find(".gridlist_load_more .load_more_button");
+    var loadMoreOverlay = gridList.find(".gridlist_load_more .load_more_overlay");
+    loadMoreText.css("display", "none");
+    loadMoreLoading.css("display", "block");
+    loadMoreButton.css("display", "none");
+    var current = $.getInt(loadMoreOverlay.css("top"));
+    var offset = gridList.totalOffset - (current - gridList.originalTop);
+    if(offset > 0) {
+        var duration = offset * (gridList.maxMoveDuration / gridList.totalOffset);
+        loadMoreOverlay.animate({"top": "+="+offset}, duration);
+    }
+    $.get("/api/get_posts.php?mode=category&id=3&time=all&page="+page, function(data){
+        setTimeout(function(){
+            if($.isArray(data)) {
+                var currentLast = adapter.getCount() - 1;
+                $.merge(adapter.list, data);
+                gridList.layoutChildren(currentLast + 1);
+            } else {
+                gridList.isLoadingData = false;
+                restLoadMoreIndicator(gridList);
+            }
+        }, 2000);
+        
+    },"json")
+}
+
+function restLoadMoreIndicator (gridList, loadMoreIndicator) {
+    var loadMoreText = gridList.find(".gridlist_load_more .load_more_text");
+    var loadMoreLoading = gridList.find(".gridlist_load_more .load_more_loading");
+    var loadMoreButton = gridList.find(".gridlist_load_more .load_more_button");
+    var loadMoreOverlay = gridList.find(".gridlist_load_more .load_more_overlay");
+    loadMoreOverlay.clearQueue();
+    loadMoreOverlay.stop();
+    loadMoreButton.css("display", "block");
+    loadMoreLoading.css("display", "none");
+    loadMoreText.css("display", "block");
+    var current = $.getInt(loadMoreOverlay.css("top"));
+    var offset = current - gridList.originalTop;
+    if(offset > 0) {
+        var duration = offset * (gridList.maxMoveDuration / gridList.totalOffset);
+        loadMoreOverlay.animate({"top": "-="+offset}, duration);
+    }
+}
+
+function onLayoutComplete(gridList, startPosition) {
+    var loadMoreIndicator = gridList.children(".gridlist_load_more");
+    var loadMoreOverlay = loadMoreIndicator.find(".load_more_overlay");
+    if(gridList.originalTop === 0) {
+        gridList.originalTop = $.getInt(loadMoreOverlay.css("top"));
+    }
+    if(gridList.isLoadingData) {
+        gridList.isLoadingData = false;
+        restLoadMoreIndicator(gridList);
+    }
+    //trim the long title to fit the size of work panel
+    var workTitleWidth = gridList.find(".work_title").width();
+
+    gridList.find(".work_title a:not(:lt("+ startPosition+ "))").ellipsis({
+        "width": workTitleWidth,
+        "useContainerPadding": true,
+        "useContainerMargin": false
+    });
+    
 }

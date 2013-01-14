@@ -8,6 +8,7 @@ body {
     margin: 0px;
     padding: 0px;
     width: 100%;
+    min-width: 1026px;
     background: #f0f0f0;
     font-family: "Geneva","微软雅黑","幼圆",Sans-serif;
  }
