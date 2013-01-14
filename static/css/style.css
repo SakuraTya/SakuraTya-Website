@@ -8,6 +8,7 @@ body {
     margin: 0px;
     padding: 0px;
     width: 100%;
+    min-width: 1026px;
     background: #f0f0f0;
     font-family: "Geneva","微软雅黑","幼圆",Sans-serif;
  }
@@ -18,6 +19,11 @@ h1, h2, h3, h4, h5, h6, hr, p, a, div, span, li, ul, ol, dt, dl, dd,fieldset, le
 
 a {
     text-decoration: none;
+    color: #156bcb;
+}
+
+a:hover {
+    color: #3385ff;
 }
 
 #header_bar {

@@ -31,7 +31,7 @@
      *
      * If you have a menu already created. your should place all data that not shown in an attribute "data" of each <li> element.
      */
-    var getInt = function (pxValue) {
+    $.getInt = function (pxValue) {
         if(typeof(pxValue)=="string") {
             var pattern = /\d+/g;
             var matchResult = pxValue.match(pattern);
@@ -44,7 +44,7 @@
         } else if(typeof(pxValue)=="number") {
             return pxValue;
         } else {
-            return null;
+            return 0;
         }
     };
 
@@ -63,7 +63,7 @@
             "ready": false,
             "defaultLabel": null
         }, params || {});
-        params.width = params.width ? getInt(params.width) : this.width();
+        params.width = params.width ? $.getInt(params.width) : this.width();
         var holderHeight = this.height();
         //The div holder can't have a static position style.
         var cssPosition = this.css("position");
@@ -142,10 +142,10 @@
             var dropDownUL = $("<ul>");
             dropDownUL.addClass("drop_down");
             var dropDownUL = this.children("ul").addClass("drop_down");
-            var paddingLeft = getInt(dropDownUL.css("padding-left"));
-            var paddingRight = getInt(dropDownUL.css("padding-right"));
-            var paddingTop = getInt(dropDownUL.css("padding-top"));
-            var paddingBottom = getInt(dropDownUL.css("padding-bottom"));
+            var paddingLeft = $.getInt(dropDownUL.css("padding-left"));
+            var paddingRight = $.getInt(dropDownUL.css("padding-right"));
+            var paddingTop = $.getInt(dropDownUL.css("padding-top"));
+            var paddingBottom = $.getInt(dropDownUL.css("padding-bottom"));
             dropDownUL.css({
               "width": params.width - paddingLeft - paddingRight,
               "height": params.height -paddingTop - paddingBottom,
@@ -195,10 +195,10 @@
             var holderPinImg =$("<div>");
             drop_down_wrapper.append(holderPinImg.addClass("dropDownPinImg"));
             var dropDownUL = this.children("ul").addClass("drop_down");
-            var paddingLeft = getInt(dropDownUL.css("padding-left"));
-            var paddingRight = getInt(dropDownUL.css("padding-right"));
-            var paddingTop = getInt(dropDownUL.css("padding-top"));
-            var paddingBottom = getInt(dropDownUL.css("padding-bottom"));
+            var paddingLeft = $.getInt(dropDownUL.css("padding-left"));
+            var paddingRight = $.getInt(dropDownUL.css("padding-right"));
+            var paddingTop = $.getInt(dropDownUL.css("padding-top"));
+            var paddingBottom = $.getInt(dropDownUL.css("padding-bottom"));
             dropDownUL.css({
               "width": params.width - paddingLeft - paddingRight,
               "height": params.height -paddingTop - paddingBottom,
@@ -269,7 +269,6 @@
             "maxWords": 0,
             "targetFrame": "li"
         }, params || {});
-        var holder = this;
         return this.each(function() {
             $(this).find(params.targetFrame).each(function(index, item){
                 var tag_frame = $(item).addClass("tag_frame");
@@ -318,8 +317,8 @@
             if( !height) {
                 height = button_wrapper.height();
             }
-            width = getInt(width) + 1;
-            height = getInt(height) + 1;
+            width = $.getInt(width) + 1;
+            height = $.getInt(height) + 1;
             button_wrapper.css({
                 "width": width + "px",
                 "height": height + "px"
@@ -511,7 +510,9 @@
     };
 
     /**
-     * 
+     * This plugin is use to ellipsis the text to ensure the text is not overflow the parent.
+     * To make sure the plugin work properly. The element and the container should have been added
+     * to the Dom tree.
      */
     $.fn.ellipsis = function(params){ 
         params = $.extend({
@@ -531,10 +532,10 @@
                 'white-space': 'nowrap'
             }); 
             if(params.useContainerPadding){
-                params.padding = getInt($(this).css("padding-left")) + getInt($(this).css("padding-right"));    
+                params.padding = $.getInt($(this).css("padding-left")) + $.getInt($(this).css("padding-right"));    
             }
             if(params.useContainerMargin) {
-                params.margin = getInt($(this).css("margin-left")) + getInt($(this).css("margin-right"));
+                params.margin = $.getInt($(this).css("margin-left")) + $.getInt($(this).css("margin-right"));
             }
             var thisText = $.trim($(this).text());
             if(params.width){
@@ -549,7 +550,7 @@
                     copyThis.remove(); 
                     return;
                 }   
-            }else if(params.num) {
+            } else if(params.num) {
                 var maxwidth=params.num;
                 
                 if(thisText.length>maxwidth){
@@ -570,5 +571,267 @@
                 }
             }                    
         });
+    }
+
+    /**
+     * Create a grid view with vertical scrolling. This grid view has animation effect when create and remove a child.
+     * You should implement an adapter and use setAdapterMethod to create a grid view.
+     *
+     */
+    $.fn.gridList = function(params) {
+        params = $.extend({
+            "stretchMode": false,
+            "numColumn": 4,
+            "columnWidth": "250px",
+            "verticalSpacing": "23px",
+            "horizontalSpacing": "6px",
+            "enterEffect": null,
+            "eraseEffect": null,
+            "loadOnScroll": true, // If set to true, the onDataLoading is invoked when scroll to the ".gridlist_load_more" element.
+            "maxLoadTimes": 4, // Use to limit the auto load when scrolling. only works when loadOnScroll is true.
+            "maxDelay": 800, // Define the max delay when the last child is performing its animation.
+            "loadMoreIndicator": null, //An area or button in the end of the list. Can be a jQuery object or an function.
+            "onLayoutComplete": null, // When layout has completed, callback function can retrieve all children element from rootView.
+            "onDataLoading": null
+        }, params || {});
+
+        // When grid_load_more indicator has shown, this 
+        var hasLoadMoreIndicatorShown = false;
+
+        // Prevent layout when addViewInLayout is invoked. This is useful for adding multiple children.
+        // 
+        var blockLayout = false;
+
+        $.extend(this, {
+            "isLoadingData": false,
+            /**
+             * Add a view before or after specific position.
+             * @param position, an integer value, define where should be insert to.
+             * @param before, an boolean value, define if should insert before the position or after it.
+             */
+            "addView": function(position, before) {
+                if (this.adapter) {
+                    var child = this.adapter.getView(position);
+                    if(child) {
+                        addViewInLayout(this, position, before, child);
+                        if(!blockLayout) {
+                            if(params.enterEffect) {
+                                params.enterEffect(child);
+                            } else {
+                                layoutAnimation(child);
+                            }
+                        }
+                    }
+                }
+            },
+            /**
+             * Remove a view in specific position.
+             * position, an integer value, define which view of position should be removed.
+             */
+            "removeView": function(position) {
+                var children = this.children();
+                if(children.length == 0 || position < 0 || position >= children.length) {
+                    return;
+                } else if(position >= 0 && position < children.length) {
+                    var victim = children.eq(position);
+                    victim.remove();
+                    layout(this, position, children.length);    
+                }
+                
+            },
+            "detachAllViews": function() {
+                var detachedChildren = this.children().detach();
+                recycleBin = detachedChildren;
+            },
+            "attachDetachedViews": function() {
+                if(this.recycleBin) {
+                    this.recycleBin.appendTo(this);
+                }
+            },
+            /**
+             * Perform a sequence layout from the given startPosition.
+             */
+            "layoutChildren": function(startPosition) {
+                if(!this.adapter) {
+                    return;
+                }
+                // Detach the load more indicator temporarily
+                var loadMoreIndicator = this.children(".gridlist_load_more").detach();
+
+                var count = this.adapter.getCount();
+                if(startPosition >= count || startPosition < 0) {
+                    return;
+                }
+                
+                blockLayout = true;
+
+                for(var i = startPosition; i < count; i++) {
+                    this.addView(i, false);
+                }
+
+                blockLayout = false;
+                var children = this.children();
+                var childCount = children.length;
+                layout(this, startPosition, childCount - 1);
+
+                for(var pos=startPosition; pos < childCount; pos++) {
+                    var child = children.eq(pos);
+                    var delay = (pos - startPosition) * (params.maxDelay / childCount);
+                    if($.isFunction(params.enterEffect)) {
+                        params.enterEffect(child, delay);
+                    } else {
+                        layoutAnimation(child, delay);
+                    }
+                }
+
+                // attach the load more indicator into
+                if(loadMoreIndicator.length == 0) {
+                    if($.isFunction(params.loadMoreIndicator)) {
+                        loadMoreIndicator = params.loadMoreIndicator(this);
+                    } else if(params.loadMoreIndicator && params.loadMoreIndicator.jquery) {
+                        loadMoreIndicator = params.loadMoreIndicator;
+                    } else {
+                        loadMoreIndicator = $("<div>").addClass("gridlist_load_more");
+                    }
+                }
+                loadMoreIndicator.appendTo(this);
+                if($.isFunction(params.onLayoutComplete)) {
+                    params.onLayoutComplete(this, startPosition);
+                }
+            },
+
+            "recycleBin": new Array(),
+
+            "adapter": {
+                "list": null,
+                "getCount": function() {
+                    return list.length;
+                },
+                "getItem": function(position) {
+                    return list[position];
+                },
+                "getItemId": function(position) {
+                    return 0;
+                },
+                "getView": function(position) {
+                    return null;
+                }
+            },
+            "setAdapter": function(listAdapter) {
+                $.extend(this.adapter, listAdapter || {});
+                // Remove previous binded onListScroll Handler.
+                if(params.loadOnScroll) {
+                    $(window).unbind("scroll", onListScroll);
+                }
+                if(this.adapter) {
+                    this.empty();
+                    this.layoutChildren(0);
+                }
+                if(params.loadOnScroll) {
+                    
+                    $(window).bind("scroll", {"rootView": this}, onListScroll);
+                }
+            },
+            "onDataLoading": params.onDataLoading,
+            "autoLoadTimes": 0,
+        });
+
+        var addViewInLayout = function(rootView, position, before, view) {
+            var children = rootView.children();
+            var childCount = children.length;
+            if(position >= childCount && childCount > 0) {
+                if(before) {
+                    rootView.prepend(view);
+                    childCount++;
+                    layout(rootView, 0, childCount-1);
+                } else {
+                    rootView.append(view);
+                    children++;
+                    layout(rootView, childCount - 1, childCount -1);
+                }
+            } else if(childCount == 0 || position < 0) {
+                // If there are no child yet, just insert the view. if position is less than zero, just insert to the last position.
+                rootView.append(view);
+                childCount++;
+                layout(rootView, childCount - 1, childCount - 1);
+            } else if(position >=0 && position < childCount && childCount > 0) {
+                var referenceView = children.eq(position);
+                if(before) {
+                    referenceView.before(view);
+                    childCount++;
+                    layout(rootView, (position > 0) ? (position - 1) : 0, childCount - 1);
+                } else {
+                    referenceView.after(view);
+                    childCount++;
+                    layout(rootView, position + 1, childCount - 1);
+                }
+            }
+        }
+        var layout = function(rootView, startPosition, endPosition) {
+            if(blockLayout) {
+                return;
+            }
+            var children = rootView.children();
+            // var maxRow = Math.floor((rootView.adapter.getCount() - 1) / params.numColumn);
+            for(var pos = startPosition; pos<=endPosition; pos++) {
+                // var row = Math.floor(pos / params.numColumn);
+                var marginRight = params.horizontalSpacing;
+                var marginBottom = params.verticalSpacing;
+                // if(row == maxRow) {
+                //     marginBottom = "0px";
+                // }
+                var rowDelta = pos % params.numColumn;
+                // console.log("rowDelta:" + rowDelta);
+                if(rowDelta == params.numColumn - 1) {
+                    marginRight = "0px";
+                }
+                var child = children.eq(pos);
+                child.css({
+                    "margin-top": "0px",
+                    "margin-right": marginRight,
+                    "margin-bottom": marginBottom,
+                    "margin-left": "0px"
+                });
+            }
+        }
+        
+
+        var onListScroll = function(event) {
+            var rootView = event.data.rootView;
+            var loadMoreIndicator = rootView.children(".gridlist_load_more");
+            if(loadMoreIndicator.length==0) {
+                return false;
+            }
+            var bodyScrollTop = document.body.scrollTop;
+            var loadMoreIndicatorOffset = loadMoreIndicator.offset();
+            var diff = loadMoreIndicatorOffset.top - bodyScrollTop;
+            
+            if(diff < window.innerHeight && !rootView.isLoadingData && !hasLoadMoreIndicatorShown && rootView.autoLoadTimes < params.maxLoadTimes) {
+                hasLoadMoreIndicatorShown = true;
+                console.log("------ loadMoreIndicator is " + hasLoadMoreIndicatorShown);
+                if($.isFunction(rootView.onDataLoading)) {
+                    rootView.autoLoadTimes++;
+                    rootView.onDataLoading();
+                }
+            } else if(diff >= window.innerHeight && hasLoadMoreIndicatorShown){
+                hasLoadMoreIndicatorShown = false;
+                console.log("------ loadMoreIndicator is " + hasLoadMoreIndicatorShown);
+            }
+        }
+
+        var layoutAnimation = function(child, delay) {
+            
+            child.animate({
+                "left": "+=15",
+                "opacity": 0
+            },0);
+            child.delay(delay);
+            child.animate({
+                "left": "-=15",
+                "opacity": 1
+            }, 500);
+        }
+
+        return this;
     }
  })(jQuery);

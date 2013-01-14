@@ -74,15 +74,348 @@
 #detail_subcategory {
     border-right: 1px solid #dfdfdf;
 }
-
+/**
+ * work_content_wrapper is the left area under navigation bar which contains the article and comments. its right is work_info_wrapper.
+ */
 #work_content_wrapper {
     width: 774px;
     float: left;
-    background: #ffffff;
-    border: 1px solid #dfdfdf;
-    min-height: 200px;
 }
 
+/* article styles  */
+#article {
+    width: 772px;;
+    min-height: 200px;
+    background: #ffffff;
+    border: 1px solid #dfdfdf;
+}
+
+/* comment styles */
+#comments {
+    width: 100%;
+    margin-top: 28px;
+}
+
+#comments_title {
+    font-size: 1em;
+    font-family: "黑体",sans-serif;
+    color: #848484;
+    border-bottom: 1px solid #d9d9d9;
+    width: 100%;
+    padding: 5px 0px 5px 0px;
+}
+
+#comments_title span {
+    padding: 0px 8px 0px 8px;
+}
+
+.commentlist {
+    width: 100%;
+    border-top: 1px solid #ffffff;
+    border-bottom: 1px solid #d9d9d9;
+    margin: 0px;
+    padding: 0px;
+    list-style-type: none;;
+}
+
+li.depth_1 {
+    margin: 70px 5px 36px 5px;
+    padding: 5px 8px 5px 8px;
+    display: block;
+    position: relative;
+    background-color: #ffffff;
+    -moz-box-shadow:    3px 5px 5px 0px rgba(0, 0, 0, 0.18);
+    -webkit-box-shadow: 3px 5px 5px 0px rgba(0, 0, 0, 0.18);
+    box-shadow:         3px 5px 5px 0px rgba(0, 0, 0, 0.18);
+}
+
+li.depth_1:after  {
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -310px -49px;
+    width: 31px;
+    height: 13px;
+    position: absolute;
+    top: -12px;
+    left: 51px;
+    content: "";
+}
+
+.comment {
+    margin: 5px 8px 10px 8px;
+}
+
+
+.comment_meta {
+    position: absolute;
+    top: -63px;
+}
+
+.comment_author_avatar {
+    width: 48px;
+    height: 48px;
+    background: #ffffff;
+    display: block;
+}
+
+.comment_author_avatar img {
+    width: 42px;
+    height: 42px;
+    margin-left: 3px;
+    margin-top: 3px;
+    border: none;
+}
+
+.comment_author_name {
+    display: block;
+    position: absolute;
+    left: 59px;
+    top: 7px;
+    font-size: 1em;
+}
+
+.comment_timestamp {
+    position: relative;
+    top: -21px;
+    left: 59px;
+    font-size: 0.79em;
+}
+
+.comment_timestamp span {
+    color: #5e5e5e;
+}
+
+.comment_content {
+    font-size: 1em;
+    color: #5e5e5e;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+.comment_content p {
+    line-height: 1.5em;
+    margin: 0px;
+}
+
+.reply {
+    float: left;
+    cursor: pointer;
+    line-height: 0.8em;
+    margin-right: 9px;
+}
+
+.reply_icon {
+    margin-top: 2px;
+    margin-right: 2px;
+    display: block;
+    float: left;
+    width: 13px;
+    height: 8px;
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -310px -36px;
+}
+
+.reply span {
+    font-size: 0.86em;
+    color: #bbbbbb;
+    display: block;
+    float: left;
+}
+
+.edit_link {
+    float:left;
+    cursor: pointer;
+    line-height: 0.8em;
+}
+
+.edit_icon {
+    margin-top: 1px;
+    margin-right: 2px;
+    display: block;
+    float: left;
+    width: 10px;
+    height: 10px;
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -324px -36px;
+}
+
+.edit_link span {
+    font-size: 0.86em;
+    color:#bbbbbb;
+    display: block;
+    float: left;
+}
+
+ul.children {
+    list-style-type: none;
+}
+
+.depth_1 ul.children {
+    padding: 0px;
+    margin: 0px;
+}
+
+.children li {
+    position: relative;
+    display: block;
+    padding-left: 59px;
+    border-top: 1px solid #d9d9d9;
+}
+
+.children .comment_meta {
+    position: relative;
+    top: 0px;
+    left: 0px;
+    float: left;
+}
+
+.children .comment_author {
+    float: left;
+}
+
+.children .comment_author_avatar {
+    width: 44px;
+    height: 44px;
+    position: absolute;
+    top: 5px;
+    left: -59px;
+    background: #d9d9d9;
+}
+
+.children .comment_author_avatar img {
+    width: 42px;
+    height: 42px;
+    margin-top: 1px;
+    margin-left: 1px;
+    border: none;
+}
+
+.children .comment_author_name {
+    font-size: 0.86em;
+    position: static;
+    float: left;
+}
+
+.comment_conversation {
+    float: left;
+    margin-left: 10px;
+    font-size: 0.79px;
+    padding-top: 2px;
+}
+
+.comment_conversation span {
+    color: #5e5e5e;
+}
+
+.children .comment_timestamp {
+    position: static;
+    float: left;
+    clear: right;
+    margin-left: 10px;
+    padding-top: 2px;
+}
+
+.children .comment_content {
+    clear:both;
+    padding-top: 5px;
+}
+
+#respond {
+    width: 100%;
+    margin-top: 14px;
+}
+
+#respond .respond_account {
+    margin-left: 15px;
+    display: block;
+    float: left;
+}
+
+#respond .respond_avatar {
+    width: 48px;
+    height: 48px;
+    display: block;
+    border: 1px solid #d9d9d9;
+    background: #ffffff;
+    float: left;
+}
+
+#respond .respond_avatar img {
+    width: 42px;
+    height: 42px;
+    margin-left: 3px;
+    margin-top: 3px;
+    border: none;
+}
+
+#respond .respond_name {
+    display: block;
+    float: left;
+    font-size: 1em;
+    margin-left: 10px;
+    margin-top: 8px;
+}
+
+#respond .respond_tips {
+    font-size: 0.79em;
+    color: #969696;
+    display: block;
+    float: left;
+    margin-left: 12px;
+    padding: 10px;
+}
+
+#compose_comment {
+    width: 673px;
+    height: auto;
+    background: #ffffff;
+    display: block;
+    clear: both;
+    border: 1px solid #d9d9d9;
+    position: relative;
+    top: -3px;
+    left: 78px;
+    padding: 0px;
+}
+
+#compose_comment:after {
+    position: absolute;
+    top: -8px;
+    left: -10px;
+    width: 17px;
+    height: 15px;
+    content: " ";
+    background: url("../img/spirite.png") no-repeat;
+    background-position: -310px -114px;
+}
+
+#comment {
+    width: 673px;
+    height: 116px;
+    padding: 8px;
+    outline: none;
+    border: none;
+    background: transparent;
+    resize: vertical;
+}
+
+#comment_submit {
+    width: 95px;
+    height: 27px;
+    margin-right: 28px;
+    margin-top: 17px;
+    display: block;
+    color: #969696;
+    float: right;
+    text-align: center;
+    position: relative;
+}
+#comment_submit span {
+    line-height: 27px;
+}
+
+/**
+ * work_info_wrapper is the right area which shows work info such as author, tag, download button etc.
+  */
 #work_info_wrapper {
     width: 240px;
     float:left;
