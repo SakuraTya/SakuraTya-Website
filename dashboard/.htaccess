@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteRule ^$ index.php?mod=index [L]
+RewriteRule info/sns index.php?mod=usersns [L]
+RewriteRule info index.php?mod=userinfo [L]
